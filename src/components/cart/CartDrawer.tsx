@@ -1,9 +1,11 @@
 import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { X, Plus, Minus, ShoppingBag } from 'lucide-react'
+import { X, Plus, Minus, ShoppingBag, Truck } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useCartStore } from '../../store/useCartStore'
 import { useUIStore } from '../../store/useUIStore'
+
+const FREE_SHIPPING_THRESHOLD = 150000
 
 export function CartDrawer() {
   const { isCartOpen, closeCart } = useUIStore()
@@ -11,6 +13,7 @@ export function CartDrawer() {
 
   const itemCount = getItemCount()
   const total = getTotal()
+  const remainingForFreeShipping = FREE_SHIPPING_THRESHOLD - total
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('es-CL', {
@@ -63,6 +66,34 @@ export function CartDrawer() {
                         <X size={24} strokeWidth={1.5} />
                       </button>
                     </div>
+
+                    {/* Free Shipping Banner */}
+                    {items.length > 0 && (
+                      <div className="px-4 py-3 bg-nature/10 border-b border-nature/20">
+                        <div className="flex items-center gap-3">
+                          <Truck size={18} className="text-nature flex-shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            {remainingForFreeShipping > 0 ? (
+                              <>
+                                <p className="text-xs text-nature-dark">
+                                  <span className="font-semibold">Te faltan {formatPrice(remainingForFreeShipping)}</span> para envío gratis
+                                </p>
+                                <div className="w-full bg-nature/20 rounded-full h-1.5 mt-1.5">
+                                  <div
+                                    className="bg-nature h-1.5 rounded-full transition-all"
+                                    style={{ width: `${Math.min((total / FREE_SHIPPING_THRESHOLD) * 100, 100)}%` }}
+                                  />
+                                </div>
+                              </>
+                            ) : (
+                              <p className="text-xs text-nature-dark font-semibold">
+                                ¡Tienes envío gratis!
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                     {/* Content */}
                     <div className="flex-1 overflow-y-auto">

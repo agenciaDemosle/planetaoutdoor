@@ -1,8 +1,12 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { ChevronRight, ChevronLeft, Lock, Truck, CreditCard, MapPin } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Helmet } from 'react-helmet-async'
+import { Link } from 'react-router-dom'
+import { ChevronRight, ChevronLeft, Lock, Truck, CreditCard, MapPin, Loader2 } from 'lucide-react'
 import { useCartStore } from '../store/useCartStore'
 import { formatPrice } from '../data/products'
+import { mercadoPagoAPI } from '../api/mercadopago'
+import { transbankAPI } from '../api/transbank'
+import { RedirectingToPaymentPage } from './RedirectingToPaymentPage'
 
 type CheckoutStep = 'information' | 'shipping' | 'payment'
 
@@ -13,30 +17,6 @@ interface ShippingOption {
   price: number
   estimatedDays: string
 }
-
-const shippingOptions: ShippingOption[] = [
-  {
-    id: 'standard',
-    name: 'Envío Estándar',
-    description: 'Entrega a domicilio',
-    price: 5990,
-    estimatedDays: '5-7 días hábiles',
-  },
-  {
-    id: 'express',
-    name: 'Envío Express',
-    description: 'Entrega prioritaria',
-    price: 9990,
-    estimatedDays: '2-3 días hábiles',
-  },
-  {
-    id: 'pickup',
-    name: 'Retiro en Tienda',
-    description: 'Recreo 838, Temuco',
-    price: 0,
-    estimatedDays: 'Disponible en 24 hrs',
-  },
-]
 
 const regions = [
   'Arica y Parinacota',
@@ -58,13 +38,50 @@ const regions = [
 ]
 
 export function CheckoutPage() {
-  const navigate = useNavigate()
   const items = useCartStore((state) => state.items)
   const getTotal = useCartStore((state) => state.getTotal)
   const clearCart = useCartStore((state) => state.clearCart)
 
   const [step, setStep] = useState<CheckoutStep>('information')
-  const [selectedShipping, setSelectedShipping] = useState<string>('standard')
+  const [shippingOptions, setShippingOptions] = useState<ShippingOption[]>([])
+  const [selectedShipping, setSelectedShipping] = useState<string>('')
+  const [loadingShipping, setLoadingShipping] = useState(true)
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [isRedirecting, setIsRedirecting] = useState(false)
+  const [paymentUrl, setPaymentUrl] = useState<string>('')
+  const [error, setError] = useState<string | null>(null)
+  const [paymentMethod, setPaymentMethod] = useState<'mercadopago' | 'transbank'>('transbank')
+
+  // Umbral para envío gratis
+  const FREE_SHIPPING_THRESHOLD = 150000
+  const SHIPPING_COST = 5990 // Costo de envío estándar
+
+  // Configurar opciones de envío
+  useEffect(() => {
+    setLoadingShipping(true)
+
+    // Opciones de envío fijas
+    const options: ShippingOption[] = [
+      {
+        id: 'pickup',
+        name: 'Retiro en Tienda',
+        description: 'Recreo 838, Temuco',
+        price: 0,
+        estimatedDays: 'Disponible en 24 hrs',
+      },
+      {
+        id: 'shipping',
+        name: 'Envío a Domicilio',
+        description: 'Despacho a todo Chile',
+        price: SHIPPING_COST,
+        estimatedDays: '3-7 días hábiles',
+      },
+    ]
+
+    setShippingOptions(options)
+    setSelectedShipping('pickup')
+    setLoadingShipping(false)
+  }, [])
   const [formData, setFormData] = useState({
     email: '',
     firstName: '',
@@ -79,9 +96,13 @@ export function CheckoutPage() {
   })
 
   const subtotal = getTotal()
-  const FREE_SHIPPING_THRESHOLD = 80000
   const selectedShippingOption = shippingOptions.find(opt => opt.id === selectedShipping)
-  const shippingCost = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : (selectedShippingOption?.price || 0)
+
+  // Lógica de envío:
+  // - Retiro en tienda: siempre gratis
+  // - Envío a domicilio: gratis sobre $150.000, sino cobra $5.990
+  const isFreeShipping = selectedShipping === 'pickup' || subtotal >= FREE_SHIPPING_THRESHOLD
+  const shippingCost = isFreeShipping ? 0 : (selectedShippingOption?.price || 0)
   const total = subtotal + shippingCost
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -91,9 +112,103 @@ export function CheckoutPage() {
     })
   }
 
-  const handleSubmitOrder = () => {
-    clearCart()
-    navigate('/gracias')
+  const handleSubmitOrder = async () => {
+    setIsProcessing(true)
+    setError(null)
+
+    try {
+      // Generar ID único para la orden
+      const orderId = `PO-${Date.now()}`
+
+      // Guardar datos del pedido en localStorage para recuperar después
+      localStorage.setItem(`order_${orderId}`, JSON.stringify({
+        items,
+        formData,
+        shippingOption: selectedShippingOption,
+        total,
+        createdAt: new Date().toISOString(),
+      }))
+
+      if (paymentMethod === 'transbank') {
+        // Pago con Transbank Webpay Plus
+        const buyOrder = transbankAPI.generateBuyOrder('PO')
+        const sessionId = transbankAPI.generateSessionId()
+
+        // Guardar para recuperar después del pago
+        localStorage.setItem('pendingOrderId', orderId)
+        localStorage.setItem('pendingBuyOrder', buyOrder)
+
+        const transaction = await transbankAPI.createTransaction({
+          buyOrder,
+          sessionId,
+          amount: total,
+          returnUrl: `${window.location.origin}/transbank/retorno`,
+        })
+
+        // Redirigir a Webpay
+        transbankAPI.redirectToWebpay(transaction.url, transaction.token)
+      } else {
+        // Pago con Mercado Pago
+        const mpItems = items.map(item => ({
+          title: item.name,
+          quantity: item.quantity,
+          currency_id: 'CLP',
+          unit_price: item.price,
+        }))
+
+        // Agregar costo de envío como item si aplica
+        if (shippingCost > 0) {
+          mpItems.push({
+            title: `Envío - ${selectedShippingOption?.name}`,
+            quantity: 1,
+            currency_id: 'CLP',
+            unit_price: shippingCost,
+          })
+        }
+
+        const preference = await mercadoPagoAPI.createPreference({
+          items: mpItems,
+          payer: {
+            name: formData.firstName,
+            surname: formData.lastName,
+            email: formData.email,
+            phone: {
+              area_code: '56',
+              number: formData.phone.replace(/\D/g, ''),
+            },
+            address: {
+              street_name: formData.address,
+              street_number: 0,
+              zip_code: formData.postalCode || '0000000',
+            },
+          },
+          back_urls: {
+            success: `${window.location.origin}/pago-exitoso?order=${orderId}`,
+            failure: `${window.location.origin}/pago-fallido?order=${orderId}`,
+            pending: `${window.location.origin}/pago-pendiente?order=${orderId}`,
+          },
+          auto_return: 'approved',
+          external_reference: orderId,
+          notification_url: 'https://planetaoutdoor.cl/api/webhooks/mercadopago',
+        })
+
+        // Guardar URL de pago y mostrar página de redirección
+        setPaymentUrl(preference.init_point)
+        setIsRedirecting(true)
+
+        // Limpiar carrito
+        clearCart()
+      }
+    } catch (err) {
+      console.error('Error creating payment:', err)
+      setError('Hubo un error al procesar tu pago. Por favor intenta nuevamente.')
+      setIsProcessing(false)
+    }
+  }
+
+  // Mostrar página de redirección
+  if (isRedirecting && paymentUrl) {
+    return <RedirectingToPaymentPage paymentUrl={paymentUrl} />
   }
 
   if (items.length === 0) {
@@ -110,6 +225,12 @@ export function CheckoutPage() {
   }
 
   return (
+    <>
+      <Helmet>
+        <title>Checkout | Planeta Outdoor</title>
+        <meta name="description" content="Finaliza tu compra en Planeta Outdoor. Pago seguro con WebPay y MercadoPago." />
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
@@ -344,47 +465,86 @@ export function CheckoutPage() {
                   Método de envío
                 </h2>
 
-                {subtotal >= FREE_SHIPPING_THRESHOLD && (
-                  <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <p className="text-sm text-green-700 font-medium">
-                      ¡Tu pedido califica para envío gratis!
+                <div className="space-y-3">
+                  {loadingShipping ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 size={24} className="animate-spin text-gray-400" />
+                      <span className="ml-2 text-gray-500">Cargando opciones de envío...</span>
+                    </div>
+                  ) : shippingOptions.length === 0 ? (
+                    <div className="text-center py-8 text-gray-500">
+                      No hay opciones de envío disponibles
+                    </div>
+                  ) : (
+                    shippingOptions.map((option) => {
+                      const isPickup = option.id === 'pickup'
+                      const isFreeByAmount = !isPickup && subtotal >= FREE_SHIPPING_THRESHOLD
+                      const displayPrice = isPickup || isFreeByAmount ? 0 : option.price
+
+                      return (
+                        <label
+                          key={option.id}
+                          className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer transition-colors ${
+                            selectedShipping === option.id
+                              ? 'border-black bg-gray-50'
+                              : 'border-gray-200 hover:border-gray-400'
+                          }`}
+                        >
+                          <div className="flex items-center gap-4">
+                            <input
+                              type="radio"
+                              name="shipping"
+                              value={option.id}
+                              checked={selectedShipping === option.id}
+                              onChange={(e) => setSelectedShipping(e.target.value)}
+                              className="w-4 h-4 text-black border-gray-300 focus:ring-black"
+                            />
+                            <div>
+                              <p className="font-medium">{option.name}</p>
+                              <p className="text-sm text-gray-500">{option.description}</p>
+                              <p className="text-xs text-gray-400 mt-1">{option.estimatedDays}</p>
+                              {isFreeByAmount && (
+                                <p className="text-xs text-nature font-medium mt-1">
+                                  Envío gratis por compra sobre $150.000
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            {isFreeByAmount ? (
+                              <>
+                                <span className="text-gray-400 line-through text-sm">{formatPrice(option.price)}</span>
+                                <span className="font-medium text-nature ml-2">Gratis</span>
+                              </>
+                            ) : (
+                              <span className="font-medium">
+                                {displayPrice === 0 ? 'Gratis' : formatPrice(displayPrice)}
+                              </span>
+                            )}
+                          </div>
+                        </label>
+                      )
+                    })
+                  )}
+                </div>
+
+                {/* Free shipping info banner */}
+                {subtotal < FREE_SHIPPING_THRESHOLD && (
+                  <div className="mt-4 p-4 bg-nature/10 border border-nature/30 rounded-lg">
+                    <p className="text-sm text-nature-dark">
+                      <span className="font-medium">Te faltan {formatPrice(FREE_SHIPPING_THRESHOLD - subtotal)}</span> para obtener envío gratis.
+                      Compras sobre $150.000 tienen despacho gratuito.
                     </p>
                   </div>
                 )}
 
-                <div className="space-y-3">
-                  {shippingOptions.map((option) => (
-                    <label
-                      key={option.id}
-                      className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer transition-colors ${
-                        selectedShipping === option.id
-                          ? 'border-black bg-gray-50'
-                          : 'border-gray-200 hover:border-gray-400'
-                      }`}
-                    >
-                      <div className="flex items-center gap-4">
-                        <input
-                          type="radio"
-                          name="shipping"
-                          value={option.id}
-                          checked={selectedShipping === option.id}
-                          onChange={(e) => setSelectedShipping(e.target.value)}
-                          className="w-4 h-4 text-black border-gray-300 focus:ring-black"
-                        />
-                        <div>
-                          <p className="font-medium">{option.name}</p>
-                          <p className="text-sm text-gray-500">{option.description}</p>
-                          <p className="text-xs text-gray-400 mt-1">{option.estimatedDays}</p>
-                        </div>
-                      </div>
-                      <span className="font-medium">
-                        {option.price === 0 || subtotal >= FREE_SHIPPING_THRESHOLD
-                          ? 'Gratis'
-                          : formatPrice(option.price)}
-                      </span>
-                    </label>
-                  ))}
-                </div>
+                {subtotal >= FREE_SHIPPING_THRESHOLD && selectedShipping === 'shipping' && (
+                  <div className="mt-4 p-4 bg-nature/10 border border-nature/30 rounded-lg">
+                    <p className="text-sm text-nature-dark font-medium">
+                      ¡Felicidades! Tu compra califica para envío gratis.
+                    </p>
+                  </div>
+                )}
 
                 {/* Shipping Address Summary */}
                 <div className="mt-6 p-4 bg-gray-50 rounded-lg">
@@ -432,41 +592,97 @@ export function CheckoutPage() {
                 </h2>
 
                 <div className="space-y-4">
-                  <div className="p-4 border border-black rounded-lg bg-gray-50">
-                    <div className="flex items-center gap-3 mb-3">
+                  {/* Transbank Webpay Plus */}
+                  <label
+                    className={`block p-6 rounded-xl cursor-pointer transition-all ${
+                      paymentMethod === 'transbank'
+                        ? 'border-2 border-[#e4002b] bg-gradient-to-br from-[#e4002b]/5 to-[#e4002b]/10'
+                        : 'border-2 border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex items-start gap-4">
                       <input
                         type="radio"
-                        name="payment"
-                        value="webpay"
-                        defaultChecked
-                        className="w-4 h-4 text-black border-gray-300 focus:ring-black"
+                        name="paymentMethod"
+                        value="transbank"
+                        checked={paymentMethod === 'transbank'}
+                        onChange={() => setPaymentMethod('transbank')}
+                        className="mt-1 w-4 h-4 text-[#e4002b] border-gray-300 focus:ring-[#e4002b]"
                       />
-                      <span className="font-medium">WebpayPlus</span>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-3">
+                          <img
+                            src="https://www.transbankdevelopers.cl/public/library/img/svg/logo_webpay_plus.svg"
+                            alt="Webpay Plus"
+                            className="h-8"
+                          />
+                          <span className="text-xs text-[#e4002b] font-medium px-2 py-1 bg-[#e4002b]/10 rounded">Recomendado</span>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-3">
+                          Paga directamente con tu tarjeta de crédito o débito chilena
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          <span className="px-3 py-1.5 bg-white border border-gray-200 rounded-full text-xs font-medium">Tarjetas de crédito</span>
+                          <span className="px-3 py-1.5 bg-white border border-gray-200 rounded-full text-xs font-medium">Tarjetas de débito</span>
+                          <span className="px-3 py-1.5 bg-white border border-gray-200 rounded-full text-xs font-medium">Redcompra</span>
+                        </div>
+                        <div className="flex items-center gap-3 mt-3 pt-3 border-t border-gray-200">
+                          <img src="https://planetaoutdoor.cl/wp-content/uploads/2025/12/Visa_Inc._logo.svg_.png" alt="Visa" className="h-5" />
+                          <img src="https://planetaoutdoor.cl/wp-content/uploads/2025/12/Mastercard-logo.svg_.webp" alt="Mastercard" className="h-7" />
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Logo_Redcompra.svg/2560px-Logo_Redcompra.svg.png" alt="Redcompra" className="h-5" />
+                        </div>
+                      </div>
                     </div>
-                    <p className="text-sm text-gray-500 ml-7">
-                      Paga con tarjeta de crédito o débito. Acepta cuotas sin interés.
-                    </p>
-                    <div className="flex gap-2 mt-3 ml-7">
-                      <span className="px-2 py-1 bg-white border border-gray-200 rounded text-xs">Visa</span>
-                      <span className="px-2 py-1 bg-white border border-gray-200 rounded text-xs">Mastercard</span>
-                      <span className="px-2 py-1 bg-white border border-gray-200 rounded text-xs">Redcompra</span>
-                    </div>
-                  </div>
+                  </label>
 
-                  <div className="p-4 border border-gray-200 rounded-lg opacity-50">
-                    <div className="flex items-center gap-3">
+                  {/* Mercado Pago */}
+                  <label
+                    className={`block p-6 rounded-xl cursor-pointer transition-all ${
+                      paymentMethod === 'mercadopago'
+                        ? 'border-2 border-[#00b1ea] bg-gradient-to-br from-[#00b1ea]/5 to-[#00b1ea]/10'
+                        : 'border-2 border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex items-start gap-4">
                       <input
                         type="radio"
-                        name="payment"
-                        value="transfer"
-                        disabled
-                        className="w-4 h-4 text-black border-gray-300 focus:ring-black"
+                        name="paymentMethod"
+                        value="mercadopago"
+                        checked={paymentMethod === 'mercadopago'}
+                        onChange={() => setPaymentMethod('mercadopago')}
+                        className="mt-1 w-4 h-4 text-[#00b1ea] border-gray-300 focus:ring-[#00b1ea]"
                       />
-                      <span className="font-medium">Transferencia Bancaria</span>
-                      <span className="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded">Próximamente</span>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-3">
+                          <img
+                            src="https://planetaoutdoor.cl/wp-content/uploads/2025/12/Mercado_Pago.svg_.webp"
+                            alt="Mercado Pago"
+                            className="h-8"
+                          />
+                        </div>
+                        <p className="text-sm text-gray-600 mb-3">
+                          Paga con Mercado Pago, acepta múltiples medios de pago
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          <span className="px-3 py-1.5 bg-white border border-gray-200 rounded-full text-xs font-medium">Tarjetas de crédito</span>
+                          <span className="px-3 py-1.5 bg-white border border-gray-200 rounded-full text-xs font-medium">Tarjetas de débito</span>
+                          <span className="px-3 py-1.5 bg-white border border-gray-200 rounded-full text-xs font-medium">Cuenta Mercado Pago</span>
+                        </div>
+                        <div className="flex items-center gap-3 mt-3 pt-3 border-t border-gray-200">
+                          <img src="https://planetaoutdoor.cl/wp-content/uploads/2025/12/Visa_Inc._logo.svg_.png" alt="Visa" className="h-5" />
+                          <img src="https://planetaoutdoor.cl/wp-content/uploads/2025/12/Mastercard-logo.svg_.webp" alt="Mastercard" className="h-7" />
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  </label>
                 </div>
+
+                {/* Error message */}
+                {error && (
+                  <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-sm text-red-600">{error}</p>
+                  </div>
+                )}
 
                 {/* Order Summary */}
                 <div className="mt-8 p-4 bg-gray-50 rounded-lg">
@@ -478,7 +694,7 @@ export function CheckoutPage() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Envío ({selectedShippingOption?.name})</span>
-                      <span className={shippingCost === 0 ? 'text-green-600' : ''}>
+                      <span>
                         {shippingCost === 0 ? 'Gratis' : formatPrice(shippingCost)}
                       </span>
                     </div>
@@ -492,22 +708,39 @@ export function CheckoutPage() {
                 <div className="flex justify-between items-center mt-8 pt-6 border-t border-gray-200">
                   <button
                     onClick={() => setStep('shipping')}
-                    className="flex items-center gap-2 text-sm text-gray-500 hover:text-black"
+                    disabled={isProcessing}
+                    className="flex items-center gap-2 text-sm text-gray-500 hover:text-black disabled:opacity-50"
                   >
                     <ChevronLeft size={16} />
                     Volver
                   </button>
                   <button
                     onClick={handleSubmitOrder}
-                    className="px-8 py-4 bg-nature text-white font-medium rounded hover:bg-nature/90 transition-colors flex items-center gap-2"
+                    disabled={isProcessing}
+                    className={`px-8 py-4 text-white font-medium rounded transition-colors flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed ${
+                      paymentMethod === 'transbank'
+                        ? 'bg-[#e4002b] hover:bg-[#c00025]'
+                        : 'bg-[#00b1ea] hover:bg-[#009ed6]'
+                    }`}
                   >
-                    <Lock size={16} />
-                    Pagar {formatPrice(total)}
+                    {isProcessing ? (
+                      <>
+                        <Loader2 size={16} className="animate-spin" />
+                        Procesando...
+                      </>
+                    ) : (
+                      <>
+                        <Lock size={16} />
+                        {paymentMethod === 'transbank' ? 'Pagar con Webpay' : 'Pagar con Mercado Pago'}
+                      </>
+                    )}
                   </button>
                 </div>
 
                 <p className="text-xs text-gray-400 text-center mt-4">
-                  Al hacer clic en "Pagar" serás redirigido a WebpayPlus para completar tu pago de forma segura.
+                  {paymentMethod === 'transbank'
+                    ? 'Al hacer clic en "Pagar" serás redirigido a Webpay Plus para completar tu pago de forma segura.'
+                    : 'Al hacer clic en "Pagar" serás redirigido a Mercado Pago para completar tu pago de forma segura.'}
                 </p>
               </div>
             )}
@@ -573,5 +806,6 @@ export function CheckoutPage() {
         </div>
       </div>
     </div>
+    </>
   )
 }

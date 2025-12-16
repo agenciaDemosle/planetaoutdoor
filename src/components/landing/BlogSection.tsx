@@ -1,26 +1,28 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Clock, BookOpen } from 'lucide-react'
+import { ArrowRight, Clock, BookOpen, ChevronLeft, ChevronRight } from 'lucide-react'
 import { wordpressAPI, BlogPost } from '../../api/wordpress'
-import { MOCKUP_POSTS } from '../../data/mockupPosts'
 
 export function BlogSection() {
   const [posts, setPosts] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
   const [isVisible, setIsVisible] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
+  const sliderRef = useRef<HTMLDivElement>(null)
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(false)
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const data = await wordpressAPI.getPosts({ per_page: 3 })
+        console.log('BlogSection: Fetching posts from WordPress...')
+        const data = await wordpressAPI.getPosts({ per_page: 6 })
+        console.log('BlogSection: Posts received:', data.posts.length, data.posts.map(p => p.title))
         if (data.posts.length > 0) {
           setPosts(data.posts)
-        } else {
-          setPosts(MOCKUP_POSTS.slice(0, 3))
         }
-      } catch {
-        setPosts(MOCKUP_POSTS.slice(0, 3))
+      } catch (error) {
+        console.error('BlogSection: Error fetching posts:', error)
       } finally {
         setLoading(false)
       }
@@ -55,6 +57,32 @@ export function BlogSection() {
     }
   }, [])
 
+  // Check scroll state
+  const checkScroll = () => {
+    if (sliderRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current
+      setCanScrollLeft(scrollLeft > 0)
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10)
+    }
+  }
+
+  useEffect(() => {
+    checkScroll()
+    window.addEventListener('resize', checkScroll)
+    return () => window.removeEventListener('resize', checkScroll)
+  }, [posts])
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (sliderRef.current) {
+      const scrollAmount = sliderRef.current.clientWidth * 0.8
+      sliderRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      })
+      setTimeout(checkScroll, 300)
+    }
+  }
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('es-CL', {
       day: 'numeric',
@@ -67,7 +95,7 @@ export function BlogSection() {
     return (
       <section className="relative">
         <div className="relative min-h-[800px]">
-          <img src="/images/web/pesca-familia.jpg" alt="" className="absolute inset-0 w-full h-full object-cover" />
+          <img src="https://planetaoutdoor.cl/wp-content/uploads/2025/12/pesca-familia.jpg" alt="" className="absolute inset-0 w-full h-full object-cover" />
           <div className="absolute inset-0 bg-black/50" />
           <div className="relative z-10 py-16 md:py-24">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -91,7 +119,9 @@ export function BlogSection() {
     )
   }
 
-  const displayPosts = posts.slice(0, 3)
+  if (posts.length === 0 && !loading) {
+    return null // No mostrar sección si no hay posts
+  }
 
   return (
     <section ref={sectionRef} className="relative">
@@ -99,7 +129,7 @@ export function BlogSection() {
       <div className="relative min-h-[900px] md:min-h-[950px] lg:min-h-[1000px]">
         {/* Imagen de fondo full */}
         <img
-          src="/images/web/pesca-familia.jpg"
+          src="https://planetaoutdoor.cl/wp-content/uploads/2025/12/pesca-familia.jpg"
           alt="Padre pescando con su hijo en un lago"
           className="absolute inset-0 w-full h-full object-cover"
         />
@@ -120,13 +150,18 @@ export function BlogSection() {
           </svg>
         </div>
 
-        {/* Gradiente crema sutil abajo para mezclarse con el separador */}
-        <div
-          className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none z-[5]"
-          style={{
-            background: 'linear-gradient(to bottom, transparent 0%, rgba(245, 243, 240, 0.6) 100%)'
-          }}
-        />
+        {/* SVG diagonal en la parte inferior */}
+        <div className="absolute bottom-0 left-0 right-0 w-full z-10">
+          <svg
+            viewBox="0 0 1440 80"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-full h-auto block"
+            preserveAspectRatio="none"
+          >
+            <path d="M0 80H1440V80L1440 0L0 60V80Z" fill="#1a3a4a" />
+          </svg>
+        </div>
 
         {/* Contenido */}
         <div className="relative z-10 py-16 md:py-20 lg:py-24">
@@ -144,19 +179,38 @@ export function BlogSection() {
               </p>
             </div>
 
-            {/* Grid de tarjetas - 3 columnas desktop, 2 tablet, 1 mobile */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-              {displayPosts.map((post, index) => (
-                <Link
-                  key={post.id}
-                  to={`/blog/${post.slug}`}
-                  className={`group bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-1 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
-                  style={{ transitionDelay: isVisible ? `${(index + 1) * 150}ms` : '0ms' }}
+            {/* Slider de tarjetas */}
+            <div className="relative">
+              {/* Botón anterior */}
+              {posts.length > 3 && (
+                <button
+                  onClick={() => scroll('left')}
+                  className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-20 w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-white hidden md:flex ${
+                    canScrollLeft ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                  }`}
+                  aria-label="Anterior"
                 >
+                  <ChevronLeft size={24} className="text-gray-800" />
+                </button>
+              )}
+
+              <div
+                ref={sliderRef}
+                onScroll={checkScroll}
+                className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 ${posts.length > 3 ? 'lg:flex lg:overflow-x-auto lg:scrollbar-hide lg:scroll-smooth lg:snap-x lg:snap-mandatory' : ''}`}
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
+                {posts.map((post, index) => (
+                  <Link
+                    key={post.id}
+                    to={`/blog/${post.slug}`}
+                    className={`group bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-1 ${posts.length > 3 ? 'lg:flex-shrink-0 lg:w-[calc(33.333%-1.5rem)] lg:snap-start' : ''} ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+                    style={{ transitionDelay: isVisible ? `${(index + 1) * 150}ms` : '0ms' }}
+                  >
                   {/* Imagen */}
                   <div className="relative aspect-[4/3] overflow-hidden">
                     <img
-                      src={post.imageUrl}
+                      src={post.imageUrl || 'https://planetaoutdoor.cl/wp-content/uploads/2025/12/pesca-tradicional.jpg'}
                       alt={post.imageAlt}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
@@ -205,6 +259,20 @@ export function BlogSection() {
                   </div>
                 </Link>
               ))}
+              </div>
+
+              {/* Botón siguiente */}
+              {posts.length > 3 && (
+                <button
+                  onClick={() => scroll('right')}
+                  className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-20 w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-white hidden md:flex ${
+                    canScrollRight ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                  }`}
+                  aria-label="Siguiente"
+                >
+                  <ChevronRight size={24} className="text-gray-800" />
+                </button>
+              )}
             </div>
 
             {/* CTA Ver más */}

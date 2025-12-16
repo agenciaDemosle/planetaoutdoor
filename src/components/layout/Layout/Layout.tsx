@@ -2,6 +2,7 @@ import { TopBar, MainHeader } from '../Header'
 import { Footer } from '../Footer'
 import { ScrollToTop } from '../../common/ScrollToTop'
 import { CartDrawer } from '../../cart/CartDrawer'
+import { WhatsAppWidget } from '../../common/WhatsAppWidget'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -16,6 +17,7 @@ export function Layout({ children }: LayoutProps) {
       <main className="flex-grow">{children}</main>
       <Footer />
       <CartDrawer />
+      <WhatsAppWidget />
     </div>
   )
 }

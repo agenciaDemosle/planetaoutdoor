@@ -24,7 +24,7 @@ export function ContactPage() {
 
     if (sendMethod === 'whatsapp') {
       const message = `Hola! Mi nombre es ${formData.nombre}.%0A%0AEmail: ${formData.email}%0ATeléfono: ${formData.telefono}%0A%0AMensaje: ${formData.mensaje}`
-      const whatsappUrl = `https://wa.me/56962183634?text=${message}`
+      const whatsappUrl = `https://wa.me/56983610365?text=${message}`
       window.open(whatsappUrl, '_blank')
     } else {
       const subject = `Contacto desde web - ${formData.nombre}`
@@ -70,9 +70,14 @@ export function ContactPage() {
                 <Phone className="h-5 w-5 text-gray-400 mt-0.5" />
                 <div>
                   <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Teléfono / WhatsApp</p>
-                  <a href="https://wa.me/56962183634" target="_blank" rel="noopener noreferrer" className="text-black hover:text-[#f46d47] transition-colors">
-                    +56 9 6218 3634
-                  </a>
+                  <div className="space-y-1">
+                    <a href="https://wa.me/56983610365" target="_blank" rel="noopener noreferrer" className="block text-black hover:text-[#f46d47] transition-colors">
+                      Eduardo: +56 9 8361 0365
+                    </a>
+                    <a href="https://wa.me/56932563910" target="_blank" rel="noopener noreferrer" className="block text-black hover:text-[#f46d47] transition-colors">
+                      Daniel: +56 9 3256 3910
+                    </a>
+                  </div>
                 </div>
               </li>
               <li className="flex items-start gap-4">
@@ -90,11 +95,11 @@ export function ContactPage() {
               <div className="space-y-3 text-sm">
                 <p className="flex justify-between">
                   <span className="text-gray-500">Lunes a Viernes</span>
-                  <span className="text-black">10:00 - 19:00</span>
+                  <span className="text-black">11:00 - 19:00</span>
                 </p>
                 <p className="flex justify-between">
                   <span className="text-gray-500">Sábado</span>
-                  <span className="text-black">10:00 - 14:00</span>
+                  <span className="text-black">11:00 - 17:00</span>
                 </p>
                 <p className="flex justify-between">
                   <span className="text-gray-500">Domingo</span>

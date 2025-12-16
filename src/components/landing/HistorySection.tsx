@@ -2,17 +2,41 @@ import { Store, Heart, Users, Award } from 'lucide-react'
 
 export function HistorySection() {
   return (
-    <section className="py-12 md:py-16 lg:py-24 bg-[#1a1a1a] text-white">
-      <div className="px-4 md:px-10 lg:px-20 max-w-container mx-auto">
-        {/* Header */}
-        <div className="text-center mb-10 md:mb-14">
-          <span className="inline-block text-[10px] sm:text-xs md:text-sm uppercase tracking-widest mb-2 sm:mb-3 text-[#FE6A00]">
-            Desde 2007
-          </span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-            Historia Planeta Outdoor
-          </h2>
+    <section className="bg-[#1a1a1a] text-white">
+      {/* Video Hero */}
+      <div className="relative h-[50vh] md:h-[60vh] lg:h-[70vh] overflow-hidden">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          webkit-playsinline="true"
+          preload="metadata"
+          className="absolute inset-0 w-full h-full object-cover"
+          src="https://res.cloudinary.com/doudjiatu/video/upload/v1765628463/historia-hero_svraqx.mp4"
+        />
+        {/* Overlay oscuro */}
+        <div className="absolute inset-0 bg-black/50" />
+        {/* Contenido sobre el video */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center px-4">
+            <span className="inline-block text-xs md:text-sm uppercase tracking-[0.3em] mb-4 text-white/80">
+              Desde 2007
+            </span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
+              Nuestra Historia
+            </h2>
+            <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto">
+              Más que una tienda, un lugar de encuentro para la comunidad de pescadores
+            </p>
+          </div>
         </div>
+        {/* Gradiente inferior */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#1a1a1a] to-transparent" />
+      </div>
+
+      {/* Contenido */}
+      <div className="py-12 md:py-16 lg:py-20 px-4 md:px-10 lg:px-20 max-w-container mx-auto">
 
         {/* Main content grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
@@ -27,7 +51,7 @@ export function HistorySection() {
             </p>
 
             <p>
-              El <span className="text-[#FE6A00] font-semibold">2015</span> marcó un salto importante: una casa grande y vieja comenzó a convertirse, con poco dinero, mucha imaginación y mucho trabajo, en la tienda física. Para <span className="text-[#FE6A00] font-semibold">2016</span> la tienda ya estaba prácticamente construida y comenzó una nueva etapa: hacerla funcionar y consolidarla. Poco antes de que la tienda empezara a funcionar llegó Gabriel, conocido como "El Palo", que fue clave en esa etapa para sacar el proyecto adelante. Más adelante se sumó Daniel, continuando con la tarea de empujar la tienda y hacerla crecer día a día.
+              El <span className="text-[#FE6A00] font-semibold">2015</span> marcó un salto importante: una casa grande y vieja comenzó a convertirse, con poco dinero, mucha imaginación y trabajo, en la tienda física. Para <span className="text-[#FE6A00] font-semibold">2008</span> la tienda ya estaba prácticamente construida y comenzó una nueva etapa: hacerla funcionar y consolidarla. Poco antes de que la tienda empezara a funcionar llegó Gabriel, conocido como "El Palo", que fue clave en esa etapa para sacar el proyecto adelante. Más adelante se sumó Daniel, continuando con la tarea de empujar la tienda y hacerla crecer día a día.
             </p>
 
             <p>
@@ -44,7 +68,7 @@ export function HistorySection() {
             {/* Store image placeholder */}
             <div className="relative rounded-xl overflow-hidden aspect-[4/3] bg-gray-800">
               <img
-                src="/images/categories/waders.jpg"
+                src="https://planetaoutdoor.cl/wp-content/uploads/2025/12/tienda-fisica.jpg"
                 alt="Tienda Planeta Outdoor"
                 className="w-full h-full object-cover opacity-80"
               />
@@ -69,7 +93,7 @@ export function HistorySection() {
               </div>
               <div className="bg-white/5 rounded-lg p-4 text-center">
                 <Users className="w-8 h-8 mx-auto mb-2 text-[#FE6A00]" />
-                <p className="text-2xl font-bold">2016</p>
+                <p className="text-2xl font-bold">2008</p>
                 <p className="text-xs text-gray-400">Tienda física</p>
               </div>
               <div className="bg-white/5 rounded-lg p-4 text-center">

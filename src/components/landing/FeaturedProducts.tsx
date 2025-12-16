@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation } from 'swiper/modules'
 import { Link } from 'react-router-dom'
-import { ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react'
+import { ChevronLeft, ChevronRight, ShoppingBag, ImageOff } from 'lucide-react'
 import { wooCommerceAPI } from '../../api/woocommerce'
 import { useCartStore } from '../../store/useCartStore'
 import { useUIStore } from '../../store/useUIStore'
@@ -26,9 +26,14 @@ export function FeaturedProducts() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [isVisible, setIsVisible] = useState(false)
+  const [imageErrors, setImageErrors] = useState<Set<number>>(new Set())
   const sectionRef = useRef<HTMLElement>(null)
   const addItem = useCartStore((state) => state.addItem)
   const openCart = useUIStore((state) => state.openCart)
+
+  const handleImageError = (productId: number) => {
+    setImageErrors(prev => new Set(prev).add(productId))
+  }
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -162,12 +167,19 @@ export function FeaturedProducts() {
               <SwiperSlide key={product.id}>
                 <Link to={`/producto/${product.slug}`} className="block group">
                   <div className="relative overflow-hidden bg-gray-100 aspect-square mb-2 sm:mb-3">
-                    <img
-                      src={product.images[0]?.src || '/placeholder.jpg'}
-                      alt={product.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      loading="lazy"
-                    />
+                    {!imageErrors.has(product.id) && product.images[0]?.src ? (
+                      <img
+                        src={product.images[0].src}
+                        alt={product.name}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy"
+                        onError={() => handleImageError(product.id)}
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <ImageOff size={24} className="text-gray-300" />
+                      </div>
+                    )}
                     {product.on_sale && (
                       <span className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 bg-red-600 text-white text-[10px] sm:text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1">
                         OFERTA

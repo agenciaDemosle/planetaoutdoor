@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import { Trash2, Minus, Plus, ShoppingBag, ArrowRight, ChevronRight, Truck } from 'lucide-react'
 import { useCartStore } from '../store/useCartStore'
@@ -11,33 +12,46 @@ export function CarritoPage() {
   const getTotal = useCartStore((state) => state.getTotal)
 
   const subtotal = getTotal()
-  const FREE_SHIPPING_THRESHOLD = 80000
+  const FREE_SHIPPING_THRESHOLD = 150000
   const remainingForFreeShipping = FREE_SHIPPING_THRESHOLD - subtotal
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <div className="text-center max-w-md">
-          <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <ShoppingBag size={40} className="text-gray-400" />
+      <>
+        <Helmet>
+          <title>Carrito de Compras | Planeta Outdoor</title>
+          <meta name="description" content="Tu carrito de compras en Planeta Outdoor. Revisa tus productos y procede al pago." />
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+          <div className="text-center max-w-md">
+            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <ShoppingBag size={40} className="text-gray-400" />
+            </div>
+            <h1 className="text-2xl font-bold mb-3">Tu carrito está vacío</h1>
+            <p className="text-gray-500 mb-8">
+              Explora nuestra tienda y encuentra los mejores productos para tu próxima aventura de pesca.
+            </p>
+            <Link
+              to="/tienda"
+              className="inline-flex items-center gap-2 bg-black text-white px-8 py-4 font-medium hover:bg-gray-800 transition-colors rounded"
+            >
+              Explorar tienda
+              <ArrowRight size={18} />
+            </Link>
           </div>
-          <h1 className="text-2xl font-bold mb-3">Tu carrito está vacío</h1>
-          <p className="text-gray-500 mb-8">
-            Explora nuestra tienda y encuentra los mejores productos para tu próxima aventura de pesca.
-          </p>
-          <Link
-            to="/tienda"
-            className="inline-flex items-center gap-2 bg-black text-white px-8 py-4 font-medium hover:bg-gray-800 transition-colors rounded"
-          >
-            Explorar tienda
-            <ArrowRight size={18} />
-          </Link>
         </div>
-      </div>
+      </>
     )
   }
 
   return (
+    <>
+      <Helmet>
+        <title>Carrito de Compras ({items.length}) | Planeta Outdoor</title>
+        <meta name="description" content="Tu carrito de compras en Planeta Outdoor. Revisa tus productos y procede al pago." />
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
     <div className="min-h-screen bg-gray-50">
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200">
@@ -55,14 +69,15 @@ export function CarritoPage() {
       {/* Free Shipping Progress */}
       {remainingForFreeShipping > 0 && (
         <div className="bg-nature/10 border-b border-nature/20">
-          <div className="px-4 md:px-10 lg:px-20 max-w-container mx-auto py-3">
+          <div className="px-4 md:px-10 lg:px-20 max-w-container mx-auto py-4">
             <div className="flex items-center gap-3">
               <Truck size={20} className="text-nature" />
               <div className="flex-1">
-                <p className="text-sm text-nature font-medium">
-                  ¡Te faltan {formatPrice(remainingForFreeShipping)} para envío gratis!
+                <p className="text-sm text-nature-dark">
+                  <span className="font-medium">Te faltan {formatPrice(remainingForFreeShipping)}</span> para obtener envío gratis.
+                  Compras sobre $150.000 tienen despacho gratuito.
                 </p>
-                <div className="w-full bg-nature/20 rounded-full h-2 mt-1">
+                <div className="w-full bg-nature/20 rounded-full h-2 mt-2">
                   <div
                     className="bg-nature h-2 rounded-full transition-all"
                     style={{ width: `${Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100)}%` }}
@@ -75,12 +90,12 @@ export function CarritoPage() {
       )}
 
       {remainingForFreeShipping <= 0 && (
-        <div className="bg-green-50 border-b border-green-200">
-          <div className="px-4 md:px-10 lg:px-20 max-w-container mx-auto py-3">
+        <div className="bg-nature/10 border-b border-nature/20">
+          <div className="px-4 md:px-10 lg:px-20 max-w-container mx-auto py-4">
             <div className="flex items-center gap-3">
-              <Truck size={20} className="text-green-600" />
-              <p className="text-sm text-green-700 font-medium">
-                ¡Felicidades! Tu pedido tiene envío gratis
+              <Truck size={20} className="text-nature" />
+              <p className="text-sm text-nature-dark font-medium">
+                ¡Felicidades! Tu compra califica para envío gratis.
               </p>
             </div>
           </div>
@@ -241,5 +256,6 @@ export function CarritoPage() {
         </div>
       </div>
     </div>
+    </>
   )
 }

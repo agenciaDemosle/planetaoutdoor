@@ -29,9 +29,11 @@ function useScrollAnimation(threshold = 0.1) {
 export function NosotrosPage() {
   const quote = useScrollAnimation()
   const inicios = useScrollAnimation()
+  const formalizacion = useScrollAnimation()
   const tienda = useScrollAnimation()
   const jugueteria = useScrollAnimation()
   const final = useScrollAnimation()
+
   return (
     <>
       <Helmet>
@@ -42,27 +44,32 @@ export function NosotrosPage() {
         />
       </Helmet>
 
-      {/* Hero Section - Full width image with sticky effect */}
+      {/* Hero Section - Full width video */}
       <section className="relative h-[70vh] min-h-[500px] flex items-center justify-center overflow-hidden">
-        <div className="fixed inset-0 -z-10">
-          <img
-            src="/images/web/hero-nosotros.jpg"
-            alt="Planeta Outdoor"
+        <div className="absolute inset-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            webkit-playsinline="true"
+            preload="metadata"
             className="w-full h-full object-cover"
+            src="https://res.cloudinary.com/doudjiatu/video/upload/v1765628463/historia-hero_svraqx.mp4"
           />
-          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-black/40" />
         </div>
         <div className="relative z-10 text-center text-white px-4 max-w-4xl">
-          <p className="text-sm md:text-base uppercase tracking-[0.3em] mb-6 text-white/80 animate-hero-text">
+          <p className="text-sm md:text-base uppercase tracking-[0.3em] mb-6 text-white/80">
             Desde 2007
           </p>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light leading-tight animate-hero-text-delay-1">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light leading-tight">
             Nuestra Historia
           </h1>
         </div>
       </section>
 
-      {/* Intro Quote - Patagonia style large typography */}
+      {/* Intro Quote */}
       <section ref={quote.ref as React.RefObject<HTMLElement>} className="py-20 md:py-32 lg:py-40 bg-white relative z-10">
         <div className={`max-w-5xl mx-auto px-6 md:px-10 transition-all duration-1000 ${quote.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <blockquote className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light leading-relaxed text-center text-gray-900">
@@ -87,25 +94,23 @@ export function NosotrosPage() {
               </h2>
               <div className="space-y-6 text-gray-600 text-lg leading-relaxed">
                 <p>
-                  Lo que comenzó siempre como ayuda y asesoría de manera desinteresada se transformó en una tienda construida a pulso.
+                  Lo que comenzó siempre como ayuda y asesoría de manera desinteresada se fue transformando en una tienda construida a pulso.
                 </p>
                 <p>
-                  La base siempre fue la confianza: muchas cosas llegaban por encargo, venta calzada, muchas veces pagadas antes de ser entregadas, y la regla era cumplir los compromisos.
+                  La base siempre fue la confianza de la gente: muchas cosas llegaban por encargo, venta calzada, muchas veces pagadas antes de ser entregadas, y la regla era cumplir los compromisos.
                 </p>
                 <p>
-                  Al principio todo cabía en una pieza de la casa de sus padres: unas pocas cosas, algunas cajas, moscas y equipo que se traía y recomendaba en los viajes de pesca.
+                  Al principio todo cabía en una pieza en la casa de mis padres: unas pocas cosas, algunas cajas, moscas y equipo que se traía y recomendaba en los viajes de pesca.
                 </p>
               </div>
             </div>
             <div className={`relative transition-all duration-700 delay-200 ${inicios.isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
-              {/* Contenedor de imagen con marco */}
               <div className="relative p-3 md:p-4">
-                {/* Marco decorativo */}
                 <div className="absolute inset-0 border-2 border-gray-300" />
                 <div className="absolute inset-2 md:inset-3 border border-gray-200" />
                 <div className="aspect-[4/5] overflow-hidden relative">
                   <img
-                    src="/images/web/perro-historia.jpg"
+                    src="https://planetaoutdoor.cl/wp-content/uploads/2025/12/perro-historia.jpg"
                     alt="Los inicios de Planeta Outdoor"
                     className="w-full h-full object-cover"
                   />
@@ -116,25 +121,37 @@ export function NosotrosPage() {
         </div>
       </section>
 
-      {/* Timeline Marker */}
-      <section className="py-20 md:py-28 text-center bg-white relative z-10">
-        <p className="text-8xl md:text-9xl font-light text-gray-200">2007</p>
-        <p className="text-lg text-gray-600 mt-4">Formalización de Planeta Outdoor</p>
+      {/* Timeline Marker - 2007 */}
+      <section ref={formalizacion.ref as React.RefObject<HTMLElement>} className="py-20 md:py-28 bg-white relative z-10">
+        <div className="max-w-4xl mx-auto px-6 md:px-10">
+          <div className={`text-center transition-all duration-700 ${formalizacion.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <p className="text-8xl md:text-9xl font-light text-gray-200">2007</p>
+            <h3 className="text-xl md:text-2xl font-light text-gray-900 mt-4 mb-8">
+              Formalización de Planeta Outdoor
+            </h3>
+            <div className="max-w-3xl mx-auto space-y-6 text-gray-600 text-lg leading-relaxed text-left">
+              <p>
+                Con los años, ese pequeño espacio y la asesoría desinteresada se fueron transformando en algo más ordenado. El año 2007 comienza la formalización de Planeta Outdoor como proyecto: organizar los encargos, ponerle nombre a la idea y comenzar a trabajar ya como tienda, aunque todo siguiera cabiendo en esa misma pieza en la casa de mis padres.
+              </p>
+              <p>
+                En ese momento la tienda física seguía siendo un sueño lejano: un lugar donde se encontraran pescadores, quienes recién estaban empezando y amigos, en torno a la pesca, la conversación y el río.
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* Story Section 2 - La Tienda */}
+      {/* Story Section 2 - La Tienda Física */}
       <section ref={tienda.ref as React.RefObject<HTMLElement>} className="py-16 md:py-24 bg-[#f7f7f7] relative z-10">
         <div className="max-w-6xl mx-auto px-6 md:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div className={`order-2 lg:order-1 relative transition-all duration-700 ${tienda.isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
-              {/* Contenedor de imagen con marco */}
               <div className="relative p-3 md:p-4">
-                {/* Marco decorativo */}
                 <div className="absolute inset-0 border-2 border-gray-300" />
                 <div className="absolute inset-2 md:inset-3 border border-gray-200" />
                 <div className="aspect-[4/5] overflow-hidden relative">
                   <img
-                    src="/images/web/tienda-fisica.jpg"
+                    src="https://planetaoutdoor.cl/wp-content/uploads/2025/12/tienda-fisica.jpg"
                     alt="La tienda física de Planeta Outdoor"
                     className="w-full h-full object-cover"
                   />
@@ -150,13 +167,13 @@ export function NosotrosPage() {
               </h2>
               <div className="space-y-6 text-gray-600 text-lg leading-relaxed">
                 <p>
-                  El 2015 marcó un salto importante: una casa grande y vieja comenzó a convertirse, con poco dinero, mucha imaginación y mucho trabajo, en la tienda física.
+                  El 2015 marcó un salto importante: una casa grande y vieja empezó a convertirse en la tienda física de Planeta Outdoor. Fue un proceso con poco dinero, mucha imaginación, aterrizando las ideas al presupuesto y haciendo lo mejor posible con los recursos que teníamos.
                 </p>
                 <p>
-                  Para 2016 la tienda ya estaba prácticamente construida y comenzó una nueva etapa: hacerla funcionar y consolidarla.
+                  Para 2016 el grueso de la construcción ya estaba prácticamente listo, pero todavía no había muebles y había poco o nada de mercadería. De nuevo fueron los amigos de siempre quienes apoyaron el proyecto con compras por encargo. Para ese entonces ya nos habíamos ganado la confianza de algunos proveedores, que nos financiaban con pequeños créditos cortos para ir llenando la tienda de vida y productos.
                 </p>
                 <p>
-                  Poco antes de que la tienda empezara a funcionar llegó Gabriel, conocido como "El Palo", que fue clave en esa etapa para sacar el proyecto adelante. Más adelante se sumó Daniel, continuando con la tarea de empujar la tienda y hacerla crecer día a día.
+                  Poco antes de abrir llegó Gabriel, conocido como "El Palo", que fue clave para sacar el proyecto adelante. Con Gabriel fueron años de aprendizaje, mucha pesca y un poquito de rock and roll. Más adelante se sumó Daniel, continuando con la tarea de empujar la tienda y hacerla crecer día a día.
                 </p>
               </div>
             </div>
@@ -164,47 +181,30 @@ export function NosotrosPage() {
         </div>
       </section>
 
-      {/* La juguetería de los pescadores - Con fondo de pescador al atardecer */}
+      {/* La juguetería de los pescadores */}
       <section ref={jugueteria.ref as React.RefObject<HTMLElement>} className="relative min-h-[600px] md:min-h-[700px] flex items-center z-10">
-        {/* Borde superior con forma de montañas invertidas */}
-        <svg className="absolute top-0 left-0 w-full h-12 md:h-20 text-white z-20" viewBox="0 0 1440 100" preserveAspectRatio="none">
+        <svg className="absolute top-0 left-0 w-full h-12 md:h-20 text-[#f7f7f7] z-20" viewBox="0 0 1440 100" preserveAspectRatio="none">
           <path d="M0 0 L0 50 L180 30 L360 60 L540 20 L720 45 L900 15 L1080 40 L1260 25 L1440 55 L1440 0 Z" fill="currentColor" />
         </svg>
 
-        {/* Imagen de fondo */}
         <div className="absolute inset-0">
-          <img
-            src="/images/web/paisaje-jugueteria.jpg"
-            alt="Paisaje Patagonia"
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            webkit-playsinline="true"
+            preload="metadata"
             className="w-full h-full object-cover"
+            src="https://res.cloudinary.com/doudjiatu/video/upload/v1765628463/jugueteria-hero_mcl4zy.mp4"
           />
           <div className="absolute inset-0 bg-black/50" />
         </div>
 
-        {/* Borde inferior con forma de montañas */}
         <svg className="absolute bottom-0 left-0 w-full h-12 md:h-20 text-black z-20" viewBox="0 0 1440 100" preserveAspectRatio="none">
           <path d="M0 100 L0 40 L200 60 L400 25 L600 50 L800 15 L1000 45 L1200 20 L1440 55 L1440 100 Z" fill="currentColor" />
         </svg>
 
-        {/* Decoración anzuelo esquina superior izquierda */}
-        <div className="absolute top-8 left-8 md:top-12 md:left-12 w-16 h-16 md:w-24 md:h-24 opacity-30">
-          <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-white w-full h-full">
-            <path d="M10 10 L10 50 Q10 70 30 70 L50 70" strokeLinecap="round" />
-            <circle cx="50" cy="70" r="8" />
-            <path d="M58 70 Q70 70 70 58 L70 30" strokeLinecap="round" />
-          </svg>
-        </div>
-
-        {/* Decoración anzuelo esquina inferior derecha */}
-        <div className="absolute bottom-8 right-8 md:bottom-12 md:right-12 w-16 h-16 md:w-24 md:h-24 opacity-30 rotate-180">
-          <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-white w-full h-full">
-            <path d="M10 10 L10 50 Q10 70 30 70 L50 70" strokeLinecap="round" />
-            <circle cx="50" cy="70" r="8" />
-            <path d="M58 70 Q70 70 70 58 L70 30" strokeLinecap="round" />
-          </svg>
-        </div>
-
-        {/* Contenido */}
         <div className={`relative z-10 max-w-4xl mx-auto px-6 md:px-10 py-20 text-center transition-all duration-1000 ${jugueteria.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <p className="text-sm uppercase tracking-[0.2em] text-white/70 mb-4">
             Hoy
@@ -213,7 +213,6 @@ export function NosotrosPage() {
             La juguetería de los pescadores
           </h2>
 
-          {/* Línea decorativa con anzuelo */}
           <div className="flex items-center gap-4 mb-8 justify-center">
             <div className="w-12 h-px bg-white/50" />
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5 text-[#FE6A00]">
@@ -231,13 +230,13 @@ export function NosotrosPage() {
               Muchos la describen como <span className="font-medium text-white">"la juguetería de los pescadores"</span>, y más de alguno ha entrado diciendo que esto es "como estar en Disney".
             </p>
             <p>
-              Planeta Outdoor es hoy una tienda de referencia en pesca y outdoor en Chile, pero detrás hay años de trabajo, confianza y decisiones cuidadas, y la base sigue siendo la misma.
+              Planeta Outdoor es hoy una tienda de referencia en pesca y outdoor en Chile. Detrás hay años de trabajo, confianza y decisiones cuidadas, y la base sigue siendo la misma:
             </p>
           </div>
         </div>
       </section>
 
-      {/* Final Statement - Large Typography */}
+      {/* Final Statement */}
       <section ref={final.ref as React.RefObject<HTMLElement>} className="py-24 md:py-40 bg-black text-white relative z-10">
         <div className={`max-w-5xl mx-auto px-6 md:px-10 text-center transition-all duration-1000 ${final.isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
           <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light leading-tight">
@@ -246,7 +245,6 @@ export function NosotrosPage() {
           </p>
         </div>
       </section>
-
     </>
   )
 }

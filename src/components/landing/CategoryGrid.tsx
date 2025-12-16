@@ -8,44 +8,54 @@ interface Category {
   subtitle?: string
   image: string
   href: string
+  imagePosition?: string // Para ajustar object-position de la imagen
 }
 
-// Categorías principales - sincronizadas con el menú de navegación y WooCommerce
+// Categorías principales - sincronizadas con el menú de navegación y WooCommerce (Dic 2025)
 const categories: Category[] = [
   {
-    id: 630,
-    title: 'Equipo de Pesca',
-    subtitle: 'Cañas, carretes y líneas',
-    image: '/images/web/pescaconmosca.jpg',
-    href: '/tienda?categoria=equipo-de-pesca',
+    id: 723,
+    title: 'Pesca con Mosca',
+    subtitle: 'Cañas, carretes, líneas y moscas',
+    image: 'https://planetaoutdoor.cl/wp-content/uploads/2025/12/Equipo-de-Pesca.jpg',
+    href: '/tienda?categoria=pesca-con-mosca',
+    imagePosition: 'left center', // Mostrar más la cara del pez
   },
   {
-    id: 638,
+    id: 724,
+    title: 'Pesca Tradicional',
+    subtitle: 'Spinning, casting y señuelos',
+    image: 'https://planetaoutdoor.cl/wp-content/uploads/2025/12/IMG-20251024-WA0033.jpg',
+    href: '/tienda?categoria=pesca-tradicional',
+    imagePosition: 'right center', // Mostrar más la cara del pez
+  },
+  {
+    id: 725,
     title: 'Waders & Botas',
     subtitle: 'Equipamiento de vadeo',
-    image: 'https://planetaoutdoor.cl/wp-content/uploads/2025/08/82365_BSNG.webp',
-    href: '/tienda?categoria=waders',
+    image: 'https://planetaoutdoor.cl/wp-content/uploads/2025/12/Wader-y-Botas-scaled.jpg',
+    href: '/tienda?categoria=waders-botas',
   },
   {
-    id: 669,
-    title: 'Ropa',
-    subtitle: 'Vestuario técnico',
-    image: '/images/web/ropa-categoria.jpg',
-    href: '/tienda?categoria=vestuario',
+    id: 726,
+    title: 'Ropa Técnica',
+    subtitle: 'Vestuario para pesca y outdoor',
+    image: 'https://planetaoutdoor.cl/wp-content/uploads/2025/12/ropa-categoria.jpg',
+    href: '/tienda?categoria=ropa-tecnica',
   },
   {
-    id: 96,
-    title: 'Outdoors',
-    subtitle: 'Accesorios y más',
-    image: '/images/web/outdoor-categoria.jpg',
-    href: '/tienda?categoria=outdoors-inicio',
+    id: 728,
+    title: 'Outdoor & Camping',
+    subtitle: 'Equipamiento para aventuras',
+    image: 'https://planetaoutdoor.cl/wp-content/uploads/2025/12/outdoor-categoria.jpg',
+    href: '/tienda?categoria=outdoor-camping',
   },
   {
-    id: 228,
-    title: 'Accesorios',
-    subtitle: 'Complementos esenciales',
-    image: '/images/web/accesorios-categoria.jpg',
-    href: '/tienda?categoria=accesorios-de-pesca',
+    id: 634,
+    title: 'Atado de Moscas',
+    subtitle: 'Materiales y herramientas',
+    image: 'https://planetaoutdoor.cl/wp-content/uploads/2025/12/accesorios-categoria.jpg',
+    href: '/tienda?categoria=atado-de-moscas',
   },
 ]
 
@@ -143,6 +153,7 @@ export function CategoryGrid() {
                     src={category.image}
                     alt={category.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    style={{ objectPosition: category.imagePosition || 'center' }}
                     loading="lazy"
                   />
                   {/* Overlay gradiente */}

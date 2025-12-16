@@ -4,6 +4,10 @@ export const env = {
     consumerKey: import.meta.env.VITE_WOO_CONSUMER_KEY || '',
     consumerSecret: import.meta.env.VITE_WOO_CONSUMER_SECRET || '',
   },
+  mercadoPago: {
+    accessToken: import.meta.env.VITE_MP_ACCESS_TOKEN || '',
+    publicKey: import.meta.env.VITE_MP_PUBLIC_KEY || '',
+  },
   site: {
     name: import.meta.env.VITE_SITE_NAME || 'Planeta Outdoor',
     url: import.meta.env.VITE_SITE_URL || '',

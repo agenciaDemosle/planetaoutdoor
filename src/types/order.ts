@@ -71,6 +71,7 @@ export interface Order {
   shipping: OrderShipping
   payment_method: string
   payment_method_title: string
+  payment_url: string
   transaction_id: string
   date_paid: string | null
   date_completed: string | null

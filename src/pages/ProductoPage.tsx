@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { useParams, Link } from 'react-router-dom'
 import { ChevronRight, ChevronDown, Minus, Plus, ShoppingCart, Truck, Phone, Shield, Check, CreditCard, Info, Ruler, Leaf } from 'lucide-react'
 import { wooCommerceAPI } from '../api/woocommerce'
@@ -14,6 +15,7 @@ import { useCartStore } from '../store/useCartStore'
 import { useUIStore } from '../store/useUIStore'
 import { SizeCalculator } from '../components/product/SizeCalculator'
 import { ProductAdvisor } from '../components/product/ProductAdvisor'
+import { CompleteYourGear } from '../components/product/CompleteYourGear'
 import toast from 'react-hot-toast'
 
 export function ProductoPage() {
@@ -124,24 +126,67 @@ export function ProductoPage() {
     openCart()
   }
 
-  // Loading state
+  // Loading state - mejorado con animación
   if (loading) {
     return (
       <div className="min-h-screen bg-white">
+        {/* Breadcrumb skeleton */}
         <div className="bg-gray-50 border-b border-gray-200">
           <div className="px-4 md:px-10 lg:px-20 max-w-container mx-auto py-3">
             <div className="h-4 bg-gray-200 w-48 animate-pulse rounded"></div>
           </div>
         </div>
+
         <div className="px-4 md:px-10 lg:px-20 max-w-container mx-auto py-8 md:py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-            <div className="aspect-square bg-gray-200 animate-pulse rounded-lg"></div>
+          {/* Loader central animado */}
+          <div className="flex flex-col items-center justify-center py-12 mb-8">
+            <div className="relative mb-6">
+              {/* Icono de pez animado */}
+              <svg
+                viewBox="0 0 64 64"
+                className="w-16 h-16 text-nature animate-pulse"
+              >
+                <path
+                  fill="currentColor"
+                  d="M48 32c0-8-12-16-24-16S4 24 4 32s8 16 20 16 24-8 24-16zm-28-4a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"
+                />
+                <path
+                  fill="currentColor"
+                  d="M52 20c4 4 8 8 8 12s-4 8-8 12c0-4-2-8-4-12 2-4 4-8 4-12z"
+                />
+              </svg>
+            </div>
+            <p className="text-gray-600 font-medium mb-2">Cargando producto</p>
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 bg-nature rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+              <div className="w-2 h-2 bg-nature rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+              <div className="w-2 h-2 bg-nature rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+            </div>
+          </div>
+
+          {/* Skeleton del producto */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 opacity-40">
+            {/* Imagen */}
+            <div>
+              <div className="aspect-square bg-gray-200 animate-pulse rounded-lg mb-4"></div>
+              <div className="flex gap-2">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="w-20 h-20 bg-gray-200 animate-pulse rounded"></div>
+                ))}
+              </div>
+            </div>
+            {/* Info */}
             <div className="space-y-4">
               <div className="h-8 bg-gray-200 w-3/4 animate-pulse rounded"></div>
               <div className="h-10 bg-gray-200 w-1/3 animate-pulse rounded"></div>
               <div className="h-4 bg-gray-200 w-full animate-pulse rounded"></div>
               <div className="h-4 bg-gray-200 w-full animate-pulse rounded"></div>
               <div className="h-4 bg-gray-200 w-2/3 animate-pulse rounded"></div>
+              <div className="flex gap-2 mt-6">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="w-12 h-12 bg-gray-200 animate-pulse rounded"></div>
+                ))}
+              </div>
               <div className="h-14 bg-gray-200 w-full animate-pulse rounded mt-8"></div>
             </div>
           </div>
@@ -168,7 +213,71 @@ export function ProductoPage() {
   const canAddToCart = !product.hasVariations || selectedVariation !== null
   const isInStock = currentStockStatus === 'instock'
 
+  // SEO metadata for product
+  const seoTitle = `${product.name} | Planeta Outdoor Chile`
+  const seoDescription = product.shortDescription
+    ? product.shortDescription.replace(/<[^>]*>/g, '').slice(0, 155)
+    : `Compra ${product.name} en Planeta Outdoor. ${product.categories[0]?.name || 'Equipamiento de pesca'} de calidad con envío a todo Chile.`
+  const canonicalUrl = `https://planetaoutdoor.cl/producto/${product.slug}`
+  const productImage = product.imageUrl || 'https://planetaoutdoor.cl/wp-content/uploads/2025/12/logo.webp'
+
   return (
+    <>
+      <Helmet>
+        <title>{seoTitle}</title>
+        <meta name="description" content={seoDescription} />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href={canonicalUrl} />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="product" />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:title" content={seoTitle} />
+        <meta property="og:description" content={seoDescription} />
+        <meta property="og:image" content={productImage} />
+        <meta property="og:locale" content="es_CL" />
+        <meta property="og:site_name" content="Planeta Outdoor" />
+
+        {/* Product specific */}
+        <meta property="product:price:amount" content={String(product.price)} />
+        <meta property="product:price:currency" content="CLP" />
+        <meta property="product:availability" content={currentStockStatus === 'instock' ? 'in stock' : 'out of stock'} />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={seoTitle} />
+        <meta name="twitter:description" content={seoDescription} />
+        <meta name="twitter:image" content={productImage} />
+
+        {/* JSON-LD Structured Data */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": product.name,
+            "description": seoDescription,
+            "image": productImage,
+            "url": canonicalUrl,
+            "brand": {
+              "@type": "Brand",
+              "name": "Planeta Outdoor"
+            },
+            "offers": {
+              "@type": "Offer",
+              "price": product.price,
+              "priceCurrency": "CLP",
+              "availability": currentStockStatus === 'instock'
+                ? "https://schema.org/InStock"
+                : "https://schema.org/OutOfStock",
+              "seller": {
+                "@type": "Organization",
+                "name": "Planeta Outdoor"
+              }
+            }
+          })}
+        </script>
+      </Helmet>
+
     <div className="min-h-screen bg-white">
       {/* Breadcrumb */}
       <div className="bg-gray-50 border-b border-gray-200">
@@ -527,7 +636,7 @@ export function ProductoPage() {
               </div>
               <div className="flex items-center gap-3 text-sm text-gray-600">
                 <Phone size={20} className="text-black" />
-                <span>Asesoría personalizada: (+56) 45 231 2870</span>
+                <span>Asesoría: Eduardo +56 9 8361 0365 / Daniel +56 9 3256 3910</span>
               </div>
               <div className="flex items-center gap-3 text-sm text-gray-600">
                 <Shield size={20} className="text-black" />
@@ -799,6 +908,17 @@ export function ProductoPage() {
           </div>
         </div>
       </div>
+
+      {/* Completa tu Equipamiento - Recomendaciones inteligentes */}
+      {product && product.categories.length > 0 && (
+        <CompleteYourGear
+          currentProduct={{
+            id: product.id,
+            categories: product.categories.map(cat => ({ id: cat.id, slug: cat.slug })),
+          }}
+        />
+      )}
     </div>
+    </>
   )
 }

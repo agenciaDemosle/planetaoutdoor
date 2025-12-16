@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { ImageOff } from 'lucide-react'
 import { Product } from '../../../types/product'
 
 interface ProductCardProps {
@@ -6,6 +8,8 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const [imageError, setImageError] = useState(false)
+
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('es-CL', {
       style: 'currency',
@@ -16,13 +20,21 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Link to={`/producto/${product.slug}`} className="group block">
-      {/* Image */}
-      <div className="relative aspect-[3/4] overflow-hidden bg-gray-100 mb-4">
-        <img
-          src={product.imageUrl}
-          alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
+      {/* Image - Proporción cuadrada */}
+      <div className="relative aspect-square overflow-hidden bg-white mb-4 rounded-lg border border-gray-100">
+        {!imageError && product.imageUrl ? (
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            className="w-full h-full object-contain p-2 transition-transform duration-700 group-hover:scale-105"
+            onError={() => setImageError(true)}
+            loading="lazy"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gray-50">
+            <ImageOff size={32} className="text-gray-300" />
+          </div>
+        )}
         {product.onSale && (
           <span className="absolute top-3 left-3 bg-black text-white text-xs font-medium px-2 py-1">
             OFERTA

@@ -118,6 +118,7 @@ export interface Product {
   onSale: boolean
   imageUrl: string
   images: string[]
+  videoUrl?: string // Video URL for product gallery
   categories: Array<{
     id: number
     name: string
@@ -146,16 +147,35 @@ export interface Product {
 function cleanHtmlContent(html: string, preserveHtml = false): string {
   if (!html) return ''
 
-  // If preserving HTML, return as-is (no shortcode removal needed for WooCommerce)
+  // First, always remove Divi/Elementor/Visual Composer shortcodes
+  let cleaned = html
+    // Remove Divi shortcodes - match opening and closing tags with anything between
+    .replace(/\[et_pb_[^\]]*\][\s\S]*?\[\/et_pb_[^\]]*\]/gi, '')
+    // Remove standalone Divi shortcodes (self-closing or unclosed)
+    .replace(/\[et_pb_[^\]]*\]/gi, '')
+    .replace(/\[\/et_pb_[^\]]*\]/gi, '')
+    // Remove Visual Composer shortcodes
+    .replace(/\[vc_[^\]]*\][\s\S]*?\[\/vc_[^\]]*\]/gi, '')
+    .replace(/\[vc_[^\]]*\]/gi, '')
+    .replace(/\[\/vc_[^\]]*\]/gi, '')
+    // Remove WPBakery shortcodes
+    .replace(/\[wpb_[^\]]*\][\s\S]*?\[\/wpb_[^\]]*\]/gi, '')
+    // Remove empty paragraphs
+    .replace(/<p>\s*<\/p>/gi, '')
+    .replace(/<p>&nbsp;<\/p>/gi, '')
+    // Clean up excess newlines
+    .replace(/\n\s*\n\s*\n/g, '\n\n')
+    .trim()
+
+  // If preserving HTML, return cleaned HTML
   if (preserveHtml) {
-    return html.trim()
+    return cleaned
   }
 
-  // For plain text, strip everything
-  return html
-    // Remove Divi shortcodes
-    .replace(/\[et_pb_[^\]]*\][^[]*\[\/et_pb_[^\]]*\]/gi, '')
-    .replace(/\[\/?\w+[^\]]*\]/g, '') // Only remove shortcode-like brackets
+  // For plain text, strip everything else
+  return cleaned
+    // Remove remaining shortcodes
+    .replace(/\[\/?\w+[^\]]*\]/g, '')
     // Remove HTML tags
     .replace(/<[^>]*>/g, '')
     // Clean up HTML entities
@@ -190,6 +210,7 @@ export function mapWooProductToProduct(woo: WooProduct): Product {
     onSale: woo.on_sale,
     imageUrl: woo.images[0]?.src || '',
     images: woo.images.map((img) => img.src),
+    videoUrl: getMetaValue('product_video_url'), // Video URL from meta field
     categories: woo.categories,
     tags: woo.tags,
     stockStatus: woo.stock_status,

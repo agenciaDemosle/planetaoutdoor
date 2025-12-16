@@ -27,5 +27,11 @@ dist-ssr
 .env
 .env.local
 .env.*.local
+
+# Large files (exceed GitHub limit)
 public/images/patagonia-pine.mp4
 public/images/hero/videohero_original.mp4
+deploy/images/patagonia-pine.mp4
+deploy/images/hero/videohero_original.mp4
+deploy/planetaoutdoor-deploy.zip
+*.zip

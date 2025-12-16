@@ -2,10 +2,10 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
-  <!-- Página principal -->
+  <!-- Pagina principal -->
   <url>
     <loc>https://planetaoutdoor.cl/</loc>
-    <lastmod>2024-12-05</lastmod>
+    <lastmod>2025-12-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -13,158 +13,324 @@
   <!-- Tienda -->
   <url>
     <loc>https://planetaoutdoor.cl/tienda</loc>
-    <lastmod>2024-12-05</lastmod>
+    <lastmod>2025-12-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Categorías principales -->
+  <!-- === CATEGORIAS PRINCIPALES === -->
+
+  <!-- Pesca con Mosca -->
   <url>
-    <loc>https://planetaoutdoor.cl/tienda?categoria=equipo-de-pesca</loc>
-    <lastmod>2024-12-05</lastmod>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=pesca-con-mosca</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=canas-mosca</loc>
+    <lastmod>2025-12-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://planetaoutdoor.cl/tienda?categoria=waders</loc>
-    <lastmod>2024-12-05</lastmod>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=carretes-mosca</loc>
+    <lastmod>2025-12-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://planetaoutdoor.cl/tienda?categoria=botas</loc>
-    <lastmod>2024-12-05</lastmod>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=lineas-mosca</loc>
+    <lastmod>2025-12-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://planetaoutdoor.cl/tienda?categoria=canas</loc>
-    <lastmod>2024-12-05</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://planetaoutdoor.cl/tienda?categoria=carretes</loc>
-    <lastmod>2024-12-05</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://planetaoutdoor.cl/tienda?categoria=lineas</loc>
-    <lastmod>2024-12-05</lastmod>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=leaders-tippets</loc>
+    <lastmod>2025-12-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://planetaoutdoor.cl/tienda?categoria=moscas</loc>
-    <lastmod>2024-12-05</lastmod>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=moscas-pesca</loc>
+    <lastmod>2025-12-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=chalecos-packs-mosqueros</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=chinguillos-sacaderas</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=accesorios-mosqueros</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=lentes-polarizados</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Atado de Moscas -->
   <url>
     <loc>https://planetaoutdoor.cl/tienda?categoria=atado-de-moscas</loc>
-    <lastmod>2024-12-05</lastmod>
+    <lastmod>2025-12-13</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
 
+  <!-- Pesca Tradicional -->
   <url>
-    <loc>https://planetaoutdoor.cl/tienda?categoria=vestuario</loc>
-    <lastmod>2024-12-05</lastmod>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=pesca-tradicional</loc>
+    <lastmod>2025-12-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://planetaoutdoor.cl/tienda?categoria=chaquetas</loc>
-    <lastmod>2024-12-05</lastmod>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=senuelos</loc>
+    <lastmod>2025-12-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://planetaoutdoor.cl/tienda?categoria=gorros</loc>
-    <lastmod>2024-12-05</lastmod>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=nylon-multifilamento</loc>
+    <lastmod>2025-12-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 
+  <!-- Waders & Botas -->
   <url>
-    <loc>https://planetaoutdoor.cl/tienda?categoria=accesorios-de-pesca</loc>
-    <lastmod>2024-12-05</lastmod>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=waders-botas</loc>
+    <lastmod>2025-12-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://planetaoutdoor.cl/tienda?categoria=gafas-y-straps</loc>
-    <lastmod>2024-12-05</lastmod>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=waders-hombre</loc>
+    <lastmod>2025-12-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://planetaoutdoor.cl/tienda?categoria=chalecos-y-bolsos</loc>
-    <lastmod>2024-12-05</lastmod>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=waders-mujer</loc>
+    <lastmod>2025-12-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://planetaoutdoor.cl/tienda?categoria=outdoors-inicio</loc>
-    <lastmod>2024-12-05</lastmod>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=botas-vadeo-goma</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=botas-vadeo-fieltro</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=accesorios-vadeo</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Ropa Tecnica -->
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=ropa-tecnica</loc>
+    <lastmod>2025-12-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://planetaoutdoor.cl/tienda?categoria=termos-outdoors-inicio</loc>
-    <lastmod>2024-12-05</lastmod>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=chaquetas-impermeables</loc>
+    <lastmod>2025-12-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://planetaoutdoor.cl/tienda?categoria=coolers</loc>
-    <lastmod>2024-12-05</lastmod>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=ropa-uv</loc>
+    <lastmod>2025-12-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 
-  <!-- Páginas informativas -->
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=gorros-jockeys</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Mochilas & Equipamiento -->
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=mochilas-equipamiento</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=mochilas-packs-pesca</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=chest-sling-hip-packs</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=bolsos-duffels</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Outdoor & Camping -->
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=outdoor-camping</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=hidratacion</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=neveras-coolers</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=cocina-campamento</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=descanso-sacos</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=calzado-outdoor</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Embarcaciones -->
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=embarcaciones-flotacion</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=float-tubes-embarcaciones-flotacion</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=tablas-sup-sub</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Ofertas -->
+  <url>
+    <loc>https://planetaoutdoor.cl/tienda?categoria=ofertas</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Blog -->
+  <url>
+    <loc>https://planetaoutdoor.cl/blog</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Paginas informativas -->
   <url>
     <loc>https://planetaoutdoor.cl/nosotros</loc>
-    <lastmod>2024-12-05</lastmod>
+    <lastmod>2025-12-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
     <loc>https://planetaoutdoor.cl/contacto</loc>
-    <lastmod>2024-12-05</lastmod>
+    <lastmod>2025-12-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
+  <!-- Paginas legales -->
   <url>
-    <loc>https://planetaoutdoor.cl/blog</loc>
-    <lastmod>2024-12-05</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://planetaoutdoor.cl/terminos-condiciones</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
   </url>
 
   <url>
-    <loc>https://planetaoutdoor.cl/servicios</loc>
-    <lastmod>2024-12-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <loc>https://planetaoutdoor.cl/condiciones-uso</loc>
+    <lastmod>2025-12-13</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
   </url>
 
 </urlset>

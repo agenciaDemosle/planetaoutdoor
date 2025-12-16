@@ -1,8 +1,12 @@
 import axios from 'axios'
-import { env } from '../config/env'
+
+// En desarrollo usa el proxy local, en producción usa la URL directa
+const baseURL = import.meta.env.DEV
+  ? '/api/wp'
+  : 'https://planetaoutdoor.cl/wp-json/wp/v2'
 
 const wpApi = axios.create({
-  baseURL: `${env.woo.url}/wp-json/wp/v2`,
+  baseURL,
 })
 
 export interface WPPost {
@@ -91,6 +95,20 @@ function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim()
 }
 
+// Extrae la primera imagen del contenido HTML
+function extractFirstImage(html: string): { url: string; alt: string } | null {
+  const imgMatch = html.match(/<img[^>]+src=["']([^"']+)["'][^>]*>/i)
+  if (imgMatch) {
+    const url = imgMatch[1]
+    const altMatch = imgMatch[0].match(/alt=["']([^"']*)["']/i)
+    return {
+      url,
+      alt: altMatch ? altMatch[1] : ''
+    }
+  }
+  return null
+}
+
 function calculateReadTime(content: string): number {
   const wordsPerMinute = 200
   const text = stripHtml(content)
@@ -103,6 +121,19 @@ function mapWPPostToBlogPost(post: WPPost): BlogPost {
   const categories = post._embedded?.['wp:term']?.[0] || []
   const author = post._embedded?.author?.[0]
 
+  // Primero intenta la imagen destacada, luego busca en el contenido
+  let imageUrl = featuredMedia?.source_url || featuredMedia?.media_details?.sizes?.large?.source_url || ''
+  let imageAlt = featuredMedia?.alt_text || post.title.rendered
+
+  // Si no hay imagen destacada, buscar la primera imagen en el contenido
+  if (!imageUrl) {
+    const contentImage = extractFirstImage(post.content.rendered)
+    if (contentImage) {
+      imageUrl = contentImage.url
+      imageAlt = contentImage.alt || post.title.rendered
+    }
+  }
+
   return {
     id: post.id,
     slug: post.slug,
@@ -110,8 +141,8 @@ function mapWPPostToBlogPost(post: WPPost): BlogPost {
     excerpt: stripHtml(post.excerpt.rendered),
     content: post.content.rendered,
     date: post.date,
-    imageUrl: featuredMedia?.source_url || featuredMedia?.media_details?.sizes?.large?.source_url || '',
-    imageAlt: featuredMedia?.alt_text || post.title.rendered,
+    imageUrl,
+    imageAlt,
     categories: categories.map(cat => ({
       id: cat.id,
       name: cat.name,

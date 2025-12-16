@@ -236,9 +236,13 @@ export function ProductAdvisor({ productName, productCategory }: ProductAdvisorP
           {/* Contact CTA */}
           <div className="p-4 bg-gray-50 border-t border-gray-100">
             <p className="text-xs text-gray-500 text-center">
-              ¿No encontraste tu respuesta? Llámanos al{' '}
-              <a href="tel:+56452312870" className="font-medium" style={{ color: '#FE6A00' }}>
-                (+56) 45 231 2870
+              ¿No encontraste tu respuesta? Llámanos:{' '}
+              <a href="tel:+56983610365" className="font-medium" style={{ color: '#FE6A00' }}>
+                Eduardo
+              </a>
+              {' o '}
+              <a href="tel:+56932563910" className="font-medium" style={{ color: '#FE6A00' }}>
+                Daniel
               </a>
             </p>
           </div>

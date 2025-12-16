@@ -15,25 +15,28 @@ interface WaderWithVideo {
   name: string
   slug: string
   videoUrl: string
+  posterUrl: string
   description: string
   features: string[]
 }
 
-// Waders Patagonia con video - datos estáticos
+// Waders Patagonia con video - datos estáticos (slugs de WooCommerce)
 const patagoniaWaders: WaderWithVideo[] = [
   {
-    id: 1,
+    id: 6715,
     name: 'Wader Patagonia Swiftcurrent Expedition',
-    slug: 'wader-patagonia-swiftcurrent-expedition',
-    videoUrl: 'https://planetaoutdoor.cl/wp-content/uploads/2025/11/82365_BSNG_CDD_FEATURE_MOTION1.mp4',
+    slug: 'wader-hombre-swiftcurrent-expedition-zip-front',
+    videoUrl: 'https://res.cloudinary.com/doudjiatu/video/upload/v1765628463/expedition_zc13w1.mp4',
+    posterUrl: 'https://planetaoutdoor.cl/wp-content/uploads/2023/05/82365_BSNG-1-324x324.jpg',
     description: 'El wader más avanzado de Patagonia. Diseñado para las condiciones más exigentes.',
     features: ['4 capas H2No', 'Cierre frontal', 'Rodilleras reforzadas'],
   },
   {
-    id: 2,
+    id: 6181,
     name: 'Wader Patagonia Swiftcurrent Traverse',
-    slug: 'wader-patagonia-swiftcurrent-traverse',
-    videoUrl: 'https://planetaoutdoor.cl/wp-content/uploads/2025/11/82385_RVGN_BF_FEATURE_MOTION1.mp4',
+    slug: 'waders-hombre-swiftcurrent-traverse-zip-front-waders',
+    videoUrl: 'https://res.cloudinary.com/doudjiatu/video/upload/v1765628463/traverse_slfuor.mp4',
+    posterUrl: 'https://planetaoutdoor.cl/wp-content/uploads/2023/05/82385_RVGN-1-324x324.jpg',
     description: 'Versatilidad y durabilidad para el pescador que busca rendimiento.',
     features: ['3 capas H2No', 'Peso ligero', 'Máxima movilidad'],
   },
@@ -45,25 +48,26 @@ export function PatagoniaWadersSection() {
     <section className="py-12 md:py-16 lg:py-20 bg-white overflow-hidden">
       <div className="px-4 md:px-10 lg:px-20 max-w-container mx-auto">
         {/* Patagonia Banner with Video Background */}
-        <div className="relative mb-10 md:mb-14 rounded-2xl overflow-hidden">
+        <div className="relative mb-10 md:mb-14 rounded-2xl overflow-hidden bg-[#1a3a5c]">
           {/* Video de fondo */}
           <video
             autoPlay
             loop
             muted
             playsInline
+            webkit-playsinline="true"
+            preload="metadata"
             className="absolute inset-0 w-full h-full object-cover"
-          >
-            <source src="/images/patagonia-pine.mp4" type="video/mp4" />
-          </video>
+            src="https://res.cloudinary.com/doudjiatu/video/upload/v1765628470/patagonia-video_frhmdn.mp4"
+          />
           {/* Overlay oscuro */}
           <div className="absolute inset-0 bg-black/50" />
           <div className="relative px-6 py-12 md:px-10 md:py-16 lg:py-20 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="text-center md:text-left">
               <img
-                src="https://planetaoutdoor.cl/wp-content/uploads/2025/11/Patagonia_logo-wt.svg"
+                src="https://planetaoutdoor.cl/wp-content/uploads/2025/12/Patagonia_Unternehmen_logo.svg_.png"
                 alt="Patagonia"
-                className="h-8 md:h-10 mb-4 mx-auto md:mx-0"
+                className="h-8 md:h-10 mb-4 mx-auto md:mx-0 brightness-0 invert"
               />
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">
                 Waders Patagonia
@@ -73,7 +77,7 @@ export function PatagoniaWadersSection() {
               </p>
             </div>
             <Link
-              to="/tienda?categoria=waders"
+              to="/tienda?categoria=waders-botas"
               className="inline-flex items-center gap-2 bg-white text-[#1a3a5c] px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors whitespace-nowrap"
             >
               Ver todos los waders
@@ -101,16 +105,18 @@ function WaderVideoCard({ wader }: WaderVideoCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(true)
+  const [videoError, setVideoError] = useState(false)
+  const [videoLoaded, setVideoLoaded] = useState(false)
 
   // Auto-play video when in viewport
   useEffect(() => {
     const video = videoRef.current
-    if (!video) return
+    if (!video || videoError) return
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
+          if (entry.isIntersecting && videoLoaded) {
             video.play().catch(() => {
               // Autoplay blocked, that's ok
             })
@@ -126,7 +132,7 @@ function WaderVideoCard({ wader }: WaderVideoCardProps) {
 
     observer.observe(video)
     return () => observer.disconnect()
-  }, [])
+  }, [videoError, videoLoaded])
 
   const togglePlay = () => {
     const video = videoRef.current
@@ -144,23 +150,42 @@ function WaderVideoCard({ wader }: WaderVideoCardProps) {
     const video = videoRef.current
     if (!video) return
 
-    video.muted = !video.muted
+    video.muted = !isMuted
     setIsMuted(!isMuted)
   }
 
   return (
     <div className="group">
       {/* Video container */}
-      <div className="relative rounded-xl overflow-hidden bg-black aspect-video mb-4 shadow-lg">
-        <video
-          ref={videoRef}
-          className="w-full h-full object-cover"
-          src={wader.videoUrl}
-          loop
-          muted={isMuted}
-          playsInline
-          preload="metadata"
-        />
+      <div className="relative rounded-xl overflow-hidden bg-gray-900 aspect-video mb-4 shadow-lg">
+        {/* Poster/Fallback image */}
+        {(!videoLoaded || videoError) && (
+          <img
+            src={wader.posterUrl}
+            alt={wader.name}
+            className="absolute inset-0 w-full h-full object-cover"
+            onError={(e) => {
+              e.currentTarget.src = 'https://planetaoutdoor.cl/wp-content/uploads/2025/11/Patagonia-Waders-Fallback.jpg'
+            }}
+          />
+        )}
+
+        {!videoError && (
+          <video
+            ref={videoRef}
+            className={`w-full h-full object-cover transition-opacity duration-500 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
+            src={wader.videoUrl}
+            loop
+            muted
+            playsInline
+            autoPlay
+            preload="metadata"
+            onLoadedData={() => setVideoLoaded(true)}
+            onCanPlayThrough={() => setVideoLoaded(true)}
+            onError={() => setVideoError(true)}
+            webkit-playsinline="true"
+          />
+        )}
 
         {/* Video controls overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
@@ -182,8 +207,8 @@ function WaderVideoCard({ wader }: WaderVideoCardProps) {
           </div>
         </div>
 
-        {/* Play button center (when paused) */}
-        {!isPlaying && (
+        {/* Play button center (when paused and video available) */}
+        {!isPlaying && !videoError && videoLoaded && (
           <button
             onClick={togglePlay}
             className="absolute inset-0 flex items-center justify-center bg-black/30"
@@ -193,6 +218,13 @@ function WaderVideoCard({ wader }: WaderVideoCardProps) {
               <Play size={28} className="text-[#1a3a5c] ml-1" />
             </div>
           </button>
+        )}
+
+        {/* Loading indicator */}
+        {!videoLoaded && !videoError && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin" />
+          </div>
         )}
       </div>
 

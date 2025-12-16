@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Search, ShoppingBag, Menu, X, ChevronRight, Mic } from 'lucide-react'
+import { Search, ShoppingBag, Menu, X, ChevronRight, Mic, User } from 'lucide-react'
 import { useCartStore } from '../../../store/useCartStore'
 import { useUIStore } from '../../../store/useUIStore'
+import { useAuthStore } from '../../../store/useAuthStore'
+import { GearConfiguratorModal } from '../../configurator'
 
 // Types for SpeechRecognition API
 interface SpeechRecognitionEvent extends Event {
@@ -50,35 +52,65 @@ declare global {
   }
 }
 
-// Datos del menú basados en categorías REALES de WooCommerce (IDs verificados)
+// Datos del menú basados en categorías de WooCommerce (actualizado Dic 2025)
 const menuData = {
-  'Equipo de Pesca': {
+  'Pesca con Mosca': {
     columns: [
       {
-        title: 'Cañas y Carretes',
+        title: 'Equipamiento',
         links: [
-          { label: 'Ver todo', href: '/tienda?categoria=equipo-de-pesca', bold: true },
-          { label: 'Cañas', href: '/tienda?categoria=canas' },
-          { label: 'Carretes', href: '/tienda?categoria=carretes' },
-          { label: 'Líneas', href: '/tienda?categoria=lineas' },
-          { label: 'Leaders', href: '/tienda?categoria=leaders' },
+          { label: 'Ver todo', href: '/tienda?categoria=pesca-con-mosca', bold: true },
+          { label: 'Cañas de Mosca', href: '/tienda?categoria=canas-mosca' },
+          { label: 'Carretes de Mosca', href: '/tienda?categoria=carretes-mosca' },
+          { label: 'Líneas de Mosca', href: '/tienda?categoria=lineas-mosca' },
+          { label: 'Leaders y Tippets', href: '/tienda?categoria=leaders-tippets' },
+          { label: 'Combos Mosqueros', href: '/tienda?categoria=combos-mosqueros' },
         ],
       },
       {
         title: 'Moscas',
         links: [
-          { label: 'Moscas', href: '/tienda?categoria=moscas' },
-          { label: 'Atado de Moscas', href: '/tienda?categoria=atado-de-moscas' },
-          { label: 'Señuelos', href: '/tienda?categoria=senuelos' },
+          { label: 'Todas las Moscas', href: '/tienda?categoria=moscas-pesca', bold: true },
+          { label: 'Secas', href: '/tienda?categoria=moscas-secas' },
+          { label: 'Ninfas', href: '/tienda?categoria=moscas-ninfas' },
+          { label: 'Streamers', href: '/tienda?categoria=moscas-streamers' },
+          { label: 'Terrestres', href: '/tienda?categoria=moscas-terrestres' },
         ],
       },
       {
+        title: 'Accesorios',
+        links: [
+          { label: 'Chalecos y Packs', href: '/tienda?categoria=chalecos-packs-mosqueros' },
+          { label: 'Chinguillos', href: '/tienda?categoria=chinguillos-sacaderas' },
+          { label: 'Accesorios Mosqueros', href: '/tienda?categoria=accesorios-mosqueros' },
+          { label: 'Lentes Polarizados', href: '/tienda?categoria=lentes-polarizados' },
+        ],
+      },
+    ],
+  },
+  'Pesca Tradicional': {
+    columns: [
+      {
         title: 'Equipamiento',
         links: [
-          { label: 'Cajas', href: '/tienda?categoria=cajas' },
-          { label: 'Chinguillos', href: '/tienda?categoria=chinguillos' },
-          { label: 'Accesorios', href: '/tienda?categoria=accesorios' },
-          { label: 'Float Tubes', href: '/tienda?categoria=float-tubes' },
+          { label: 'Ver todo', href: '/tienda?categoria=pesca-tradicional', bold: true },
+          { label: 'Cañas Spinning/Casting', href: '/tienda?categoria=canas-tradicional' },
+          { label: 'Carretes', href: '/tienda?categoria=carretes-tradicional' },
+          { label: 'Nylon y Multifilamento', href: '/tienda?categoria=nylon-multifilamento' },
+          { label: 'Accesorios', href: '/tienda?categoria=accesorios-tradicional' },
+        ],
+      },
+      {
+        title: 'Señuelos',
+        links: [
+          { label: 'Todos los Señuelos', href: '/tienda?categoria=senuelos-tradicional', bold: true },
+          { label: 'Spoons y Cucharas', href: '/tienda?categoria=senuelos-spoons-cucharas' },
+          { label: 'Spinners', href: '/tienda?categoria=senuelos-spinners' },
+          { label: 'Crankbaits', href: '/tienda?categoria=senuelos-crankbaits' },
+          { label: 'Minnows y Jerkbaits', href: '/tienda?categoria=senuelos-minnows-jerkbaits' },
+          { label: 'Soft Baits y Vinilos', href: '/tienda?categoria=senuelos-soft-baits' },
+          { label: 'Metal Jigs', href: '/tienda?categoria=senuelos-metal-jigs' },
+          { label: 'Topwater', href: '/tienda?categoria=senuelos-topwater' },
         ],
       },
     ],
@@ -86,72 +118,109 @@ const menuData = {
   'Waders & Botas': {
     columns: [
       {
-        title: 'Waders y Botas',
+        title: 'Waders',
         links: [
-          { label: 'Ver Waders', href: '/tienda?categoria=waders', bold: true },
-          { label: 'Ver Botas', href: '/tienda?categoria=botas', bold: true },
+          { label: 'Ver todo', href: '/tienda?categoria=waders-botas', bold: true },
+          { label: 'Waders Hombre', href: '/tienda?categoria=waders-hombre' },
+          { label: 'Waders Mujer', href: '/tienda?categoria=waders-mujer' },
+        ],
+      },
+      {
+        title: 'Botas de Vadeo',
+        links: [
+          { label: 'Botas Suela Goma', href: '/tienda?categoria=botas-vadeo-goma' },
+          { label: 'Botas Suela Fieltro', href: '/tienda?categoria=botas-vadeo-fieltro' },
+          { label: 'Botas Suela Intercambiable', href: '/tienda?categoria=botas-intercambiables' },
+          { label: 'Accesorios de Vadeo', href: '/tienda?categoria=accesorios-vadeo' },
         ],
       },
     ],
   },
-  'Ropa': {
+  'Ropa Técnica': {
     columns: [
       {
         title: 'Vestuario',
         links: [
-          { label: 'Ver todo', href: '/tienda?categoria=vestuario', bold: true },
-          { label: 'Chaquetas', href: '/tienda?categoria=chaquetas' },
-          { label: 'Poleras UV y Camisas', href: '/tienda?categoria=poleras-uv' },
-          { label: 'Gorros', href: '/tienda?categoria=gorros' },
+          { label: 'Ver todo', href: '/tienda?categoria=ropa-tecnica', bold: true },
+          { label: 'Chaquetas Impermeables', href: '/tienda?categoria=chaquetas-impermeables' },
+          { label: 'Capas Intermedias', href: '/tienda?categoria=capas-intermedias' },
+          { label: 'Capas Base', href: '/tienda?categoria=capas-base' },
+          { label: 'Ropa con Filtro UV', href: '/tienda?categoria=ropa-uv' },
+          { label: 'Pantalones y Shorts', href: '/tienda?categoria=pantalones-shorts' },
         ],
       },
       {
         title: 'Accesorios',
         links: [
-          { label: 'Gafas y Straps', href: '/tienda?categoria=gafas-y-straps' },
-          { label: 'Chalecos y Bolsos', href: '/tienda?categoria=chalecos-y-bolsos' },
+          { label: 'Gorros y Jockeys', href: '/tienda?categoria=gorros-jockeys' },
+          { label: 'Bandanas', href: '/tienda?categoria=bandanas' },
+          { label: 'Lentes Polarizados', href: '/tienda?categoria=lentes-polarizados-ropa' },
+          { label: 'Guantes', href: '/tienda?categoria=guantes' },
+          { label: 'Calcetines Técnicos', href: '/tienda?categoria=calcetines-tecnicos' },
         ],
       },
     ],
   },
-  'Accesorios': {
+  'Atado de Moscas': {
     columns: [
       {
-        title: 'Accesorios de Pesca',
+        title: 'Herramientas',
         links: [
-          { label: 'Ver todo', href: '/tienda?categoria=accesorios-de-pesca', bold: true },
-          { label: 'Infaltables', href: '/tienda?categoria=infaltables' },
-          { label: 'Gafas y Straps', href: '/tienda?categoria=gafas-y-straps' },
-          { label: 'Zapatos', href: '/tienda?categoria=zapatos' },
+          { label: 'Ver todo', href: '/tienda?categoria=atado-de-moscas', bold: true },
+          { label: 'Prensas y Herramientas', href: '/tienda?categoria=prensas-herramientas' },
+          { label: 'Anzuelos', href: '/tienda?categoria=anzuelos-atado' },
+          { label: 'Kits y Packs de Atado', href: '/tienda?categoria=kits-packs-atado' },
         ],
       },
       {
-        title: 'Otros',
+        title: 'Materiales Naturales',
         links: [
-          { label: 'Flashers y Parabans', href: '/tienda?categoria=flashers-y-parabans' },
-          { label: 'Gearaid', href: '/tienda?categoria=gearaid' },
-          { label: 'Stickers', href: '/tienda?categoria=stickers' },
+          { label: 'Plumas', href: '/tienda?categoria=plumas-atado' },
+          { label: 'Pelos y Cueros', href: '/tienda?categoria=pelos-naturales-cueros' },
+          { label: 'Dubbings', href: '/tienda?categoria=dubbings' },
+        ],
+      },
+      {
+        title: 'Materiales Sintéticos',
+        links: [
+          { label: 'Sintéticos y Flash', href: '/tienda?categoria=sinteticos-flash' },
+          { label: 'Cuerpos, Ribbing y Tinsel', href: '/tienda?categoria=cuerpos-ribbing-tinsel' },
+          { label: 'Ojos y Cabezas', href: '/tienda?categoria=ojos-cabezas' },
+          { label: 'Hilos y Floss', href: '/tienda?categoria=hilos-floss' },
+          { label: 'Pegamentos y Resinas', href: '/tienda?categoria=pegamentos-barnices-resinas' },
         ],
       },
     ],
   },
-  'Outdoors': {
+  'Outdoor': {
     columns: [
       {
-        title: 'Camping y Outdoor',
+        title: 'Camping',
         links: [
-          { label: 'Ver todo', href: '/tienda?categoria=outdoors-inicio', bold: true },
-          { label: 'Termos', href: '/tienda?categoria=termos-outdoors-inicio' },
-          { label: 'Coolers', href: '/tienda?categoria=coolers' },
-          { label: 'Carpas y Sacos', href: '/tienda?categoria=carpas-y-sacos' },
-          { label: 'Cocinillas', href: '/tienda?categoria=cocinillas' },
+          { label: 'Ver todo', href: '/tienda?categoria=outdoor-camping', bold: true },
+          { label: 'Hidratación y Termos', href: '/tienda?categoria=hidratacion' },
+          { label: 'Neveras y Coolers', href: '/tienda?categoria=neveras-coolers' },
+          { label: 'Cocina y Campamento', href: '/tienda?categoria=cocina-campamento' },
+          { label: 'Descanso y Sacos', href: '/tienda?categoria=descanso-sacos' },
+          { label: 'Iluminación', href: '/tienda?categoria=iluminacion' },
         ],
       },
       {
-        title: 'Actividades',
+        title: 'Equipamiento',
         links: [
-          { label: 'Calzado', href: '/tienda?categoria=calzado' },
-          { label: 'Actividades Acuáticas', href: '/tienda?categoria=actividades-acuaticas' },
+          { label: 'Mochilas y Packs', href: '/tienda?categoria=mochilas-equipamiento', bold: true },
+          { label: 'Mochilas de Pesca', href: '/tienda?categoria=mochilas-packs-pesca' },
+          { label: 'Chest/Sling/Hip Packs', href: '/tienda?categoria=chest-sling-hip-packs' },
+          { label: 'Bolsos y Duffels', href: '/tienda?categoria=bolsos-duffels' },
+          { label: 'Calzado Outdoor', href: '/tienda?categoria=calzado-outdoor' },
+          { label: 'Herramientas y Cuchillos', href: '/tienda?categoria=herramientas-cuchillos' },
+        ],
+      },
+      {
+        title: 'Flotación',
+        links: [
+          { label: 'Float Tubes', href: '/tienda?categoria=float-tubes-embarcaciones-flotacion' },
+          { label: 'SUP y Kayak', href: '/tienda?categoria=tablas-sup-sub' },
         ],
       },
     ],
@@ -161,12 +230,12 @@ const menuData = {
 type MenuKey = keyof typeof menuData
 
 const navItems = [
-  { label: 'Equipo de Pesca', href: '/tienda?categoria=equipo-de-pesca', hasSubmenu: true },
-  { label: 'Waders & Botas', href: '/tienda?categoria=waders', hasSubmenu: true },
-  { label: 'Ropa', href: '/tienda?categoria=vestuario', hasSubmenu: true },
-  { label: 'Accesorios', href: '/tienda?categoria=accesorios-de-pesca', hasSubmenu: true },
-  { label: 'Outdoors', href: '/tienda?categoria=outdoors-inicio', hasSubmenu: true },
-  { label: 'Nuestra Historia', href: '/nosotros', hasSubmenu: false },
+  { label: 'Pesca con Mosca', href: '/tienda?categoria=pesca-con-mosca', hasSubmenu: true },
+  { label: 'Pesca Tradicional', href: '/tienda?categoria=pesca-tradicional', hasSubmenu: true },
+  { label: 'Waders & Botas', href: '/tienda?categoria=waders-botas', hasSubmenu: true },
+  { label: 'Ropa Técnica', href: '/tienda?categoria=ropa-tecnica', hasSubmenu: true },
+  { label: 'Atado de Moscas', href: '/tienda?categoria=atado-de-moscas', hasSubmenu: true },
+  { label: 'Outdoor', href: '/tienda?categoria=outdoor-camping', hasSubmenu: true },
   { label: 'Blog', href: '/blog', hasSubmenu: false },
   { label: 'Contacto', href: '/contacto', hasSubmenu: false },
 ]
@@ -178,6 +247,7 @@ export function MainHeader() {
   const [mobileSubmenu, setMobileSubmenu] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [isListening, setIsListening] = useState(false)
+  const [isConfiguratorOpen, setIsConfiguratorOpen] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const menuTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const navigate = useNavigate()
@@ -245,6 +315,7 @@ export function MainHeader() {
   const items = useCartStore((state) => state.items)
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0)
   const openCart = useUIStore((state) => state.openCart)
+  const { isAuthenticated, user } = useAuthStore()
 
   const handleSearch = (query: string) => {
     if (query.trim()) {
@@ -317,7 +388,7 @@ export function MainHeader() {
               {/* Logo */}
               <Link to="/" className="flex items-center">
                 <img
-                  src="/logo.webp"
+                  src="https://planetaoutdoor.cl/wp-content/uploads/2025/12/logo.webp"
                   alt="Planeta Outdoor"
                   className="h-10 lg:h-12 w-auto"
                 />
@@ -352,6 +423,24 @@ export function MainHeader() {
 
             {/* Right - Icons */}
             <div className="flex items-center gap-0.5 ml-auto">
+              {/* Configurator Button */}
+              <button
+                onClick={() => setIsConfiguratorOpen(true)}
+                className="hidden sm:flex items-center px-4 py-1.5 bg-[#FE6A00] text-white text-xs font-medium tracking-wide uppercase hover:bg-[#e55f00] transition-colors mr-1"
+                aria-label="Configurador de Equipo"
+              >
+                Arma tu Kit
+              </button>
+
+              {/* Mobile Configurator Button */}
+              <button
+                onClick={() => setIsConfiguratorOpen(true)}
+                className="sm:hidden px-3 py-1.5 bg-[#FE6A00] text-white text-[10px] font-medium tracking-wide uppercase hover:bg-[#e55f00] transition-colors"
+                aria-label="Configurador de Equipo"
+              >
+                Kit
+              </button>
+
               {/* Search Button & Dropdown */}
               <div className="relative">
                 <button
@@ -403,6 +492,26 @@ export function MainHeader() {
                   </>
                 )}
               </div>
+
+              {/* User Account Button */}
+              <Link
+                to={isAuthenticated ? '/mi-cuenta' : '/login'}
+                className="relative p-2.5 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label={isAuthenticated ? 'Mi cuenta' : 'Iniciar sesión'}
+              >
+                {isAuthenticated && user?.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt={user.displayName}
+                    className="w-5 h-5 rounded-full object-cover"
+                  />
+                ) : (
+                  <User size={20} strokeWidth={1.5} />
+                )}
+                {isAuthenticated && (
+                  <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white" />
+                )}
+              </Link>
 
               <button
                 onClick={openCart}
@@ -600,6 +709,12 @@ export function MainHeader() {
           animation: slideIn 0.3s ease-out;
         }
       `}</style>
+
+      {/* Gear Configurator Modal */}
+      <GearConfiguratorModal
+        isOpen={isConfiguratorOpen}
+        onClose={() => setIsConfiguratorOpen(false)}
+      />
     </>
   )
 }

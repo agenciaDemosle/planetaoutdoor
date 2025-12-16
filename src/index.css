@@ -572,3 +572,123 @@
   animation: heroFadeIn 1s ease-out 0.6s forwards;
   opacity: 0;
 }
+
+/* ===== Fish Swimming Loader ===== */
+@keyframes swim {
+  0%, 100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  25% {
+    transform: translateX(5px) rotate(5deg);
+  }
+  50% {
+    transform: translateX(0) rotate(0deg);
+  }
+  75% {
+    transform: translateX(-5px) rotate(-5deg);
+  }
+}
+
+.animate-swim {
+  animation: swim 1.5s ease-in-out infinite;
+}
+
+/* Tail wiggle */
+@keyframes tail {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+}
+
+.animate-tail {
+  animation: tail 0.3s ease-in-out infinite;
+  transform-origin: left center;
+}
+
+/* Bubbles */
+@keyframes bubble-1 {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px) scale(1);
+  }
+}
+
+@keyframes bubble-2 {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.3);
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-25px) scale(0.8);
+  }
+}
+
+@keyframes bubble-3 {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.4);
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-18px) scale(0.9);
+  }
+}
+
+.animate-bubble-1 {
+  animation: bubble-1 1.5s ease-out infinite;
+}
+
+.animate-bubble-2 {
+  animation: bubble-2 1.8s ease-out infinite 0.3s;
+}
+
+.animate-bubble-3 {
+  animation: bubble-3 2s ease-out infinite 0.6s;
+}
+
+/* Slide up animation for WhatsApp widget */
+@keyframes slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out forwards;
+}
+
+/* Fade in */
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
