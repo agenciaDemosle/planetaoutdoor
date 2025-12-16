@@ -10,6 +10,7 @@
     },
     "tag": [
       {
+        "tagId": "1",
         "name": "GA4 Config",
         "type": "googtag",
         "parameter": [
@@ -32,9 +33,10 @@
             ]
           }
         ],
-        "firingTriggerId": ["all_pages"]
+        "firingTriggerId": ["2"]
       },
       {
+        "tagId": "2",
         "name": "Meta Pixel - Base Code",
         "type": "html",
         "parameter": [
@@ -44,18 +46,20 @@
             "value": "<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init', '{{Meta Pixel ID}}');fbq('track', 'PageView');</script><noscript><img height=\"1\" width=\"1\" style=\"display:none\" src=\"https://www.facebook.com/tr?id={{Meta Pixel ID}}&ev=PageView&noscript=1\"/></noscript>"
           }
         ],
-        "firingTriggerId": ["all_pages"]
+        "firingTriggerId": ["2"]
       },
       {
+        "tagId": "3",
         "name": "GA4 - Page View",
         "type": "gaawe",
         "parameter": [
           {"type": "TEMPLATE", "key": "eventName", "value": "page_view"},
           {"type": "TEMPLATE", "key": "measurementIdOverride", "value": "{{GA4 Measurement ID}}"}
         ],
-        "firingTriggerId": ["page_view_trigger"]
+        "firingTriggerId": ["3"]
       },
       {
+        "tagId": "4",
         "name": "GA4 - View Item",
         "type": "gaawe",
         "parameter": [
@@ -63,9 +67,10 @@
           {"type": "TEMPLATE", "key": "eventName", "value": "view_item"},
           {"type": "TEMPLATE", "key": "measurementIdOverride", "value": "{{GA4 Measurement ID}}"}
         ],
-        "firingTriggerId": ["view_content_trigger"]
+        "firingTriggerId": ["4"]
       },
       {
+        "tagId": "5",
         "name": "Meta Pixel - ViewContent",
         "type": "html",
         "parameter": [
@@ -75,9 +80,10 @@
             "value": "<script>fbq('track', 'ViewContent', {value: {{DL - Value}}, currency: '{{DL - Currency}}', content_name: '{{DL - Product Name}}', content_ids: ['{{DL - Product ID}}'], content_type: 'product', content_category: '{{DL - Product Category}}'}, {eventID: '{{DL - Event ID}}'});</script>"
           }
         ],
-        "firingTriggerId": ["view_content_trigger"]
+        "firingTriggerId": ["4"]
       },
       {
+        "tagId": "6",
         "name": "GA4 - Add to Cart",
         "type": "gaawe",
         "parameter": [
@@ -85,9 +91,10 @@
           {"type": "TEMPLATE", "key": "eventName", "value": "add_to_cart"},
           {"type": "TEMPLATE", "key": "measurementIdOverride", "value": "{{GA4 Measurement ID}}"}
         ],
-        "firingTriggerId": ["add_to_cart_trigger"]
+        "firingTriggerId": ["6"]
       },
       {
+        "tagId": "7",
         "name": "Meta Pixel - AddToCart",
         "type": "html",
         "parameter": [
@@ -97,9 +104,10 @@
             "value": "<script>fbq('track', 'AddToCart', {value: {{DL - Value}}, currency: '{{DL - Currency}}', content_name: '{{DL - Product Name}}', content_ids: ['{{DL - Product ID}}'], content_type: 'product', content_category: '{{DL - Product Category}}'}, {eventID: '{{DL - Event ID}}'});</script>"
           }
         ],
-        "firingTriggerId": ["add_to_cart_trigger"]
+        "firingTriggerId": ["6"]
       },
       {
+        "tagId": "8",
         "name": "GA4 - Begin Checkout",
         "type": "gaawe",
         "parameter": [
@@ -107,9 +115,10 @@
           {"type": "TEMPLATE", "key": "eventName", "value": "begin_checkout"},
           {"type": "TEMPLATE", "key": "measurementIdOverride", "value": "{{GA4 Measurement ID}}"}
         ],
-        "firingTriggerId": ["begin_checkout_trigger"]
+        "firingTriggerId": ["7"]
       },
       {
+        "tagId": "9",
         "name": "Meta Pixel - InitiateCheckout",
         "type": "html",
         "parameter": [
@@ -119,9 +128,10 @@
             "value": "<script>fbq('track', 'InitiateCheckout', {value: {{DL - Value}}, currency: '{{DL - Currency}}', content_name: 'checkout_initiated', num_items: {{DL - Num Items}}}, {eventID: '{{DL - Event ID}}'});</script>"
           }
         ],
-        "firingTriggerId": ["initiate_checkout_trigger"]
+        "firingTriggerId": ["8"]
       },
       {
+        "tagId": "10",
         "name": "GA4 - Purchase",
         "type": "gaawe",
         "parameter": [
@@ -129,9 +139,10 @@
           {"type": "TEMPLATE", "key": "eventName", "value": "purchase"},
           {"type": "TEMPLATE", "key": "measurementIdOverride", "value": "{{GA4 Measurement ID}}"}
         ],
-        "firingTriggerId": ["purchase_trigger"]
+        "firingTriggerId": ["9"]
       },
       {
+        "tagId": "11",
         "name": "Meta Pixel - Purchase",
         "type": "html",
         "parameter": [
@@ -141,9 +152,10 @@
             "value": "<script>fbq('track', 'Purchase', {value: {{DL - Value}}, currency: '{{DL - Currency}}', content_ids: {{DL - Product IDs}}, num_items: {{DL - Num Items}}}, {eventID: '{{DL - Event ID}}'});</script>"
           }
         ],
-        "firingTriggerId": ["purchase_trigger"]
+        "firingTriggerId": ["9"]
       },
       {
+        "tagId": "12",
         "name": "GA4 - Search",
         "type": "gaawe",
         "parameter": [
@@ -163,9 +175,10 @@
           },
           {"type": "TEMPLATE", "key": "measurementIdOverride", "value": "{{GA4 Measurement ID}}"}
         ],
-        "firingTriggerId": ["search_trigger"]
+        "firingTriggerId": ["10"]
       },
       {
+        "tagId": "13",
         "name": "Meta Pixel - Search",
         "type": "html",
         "parameter": [
@@ -175,18 +188,20 @@
             "value": "<script>fbq('track', 'Search', {search_string: '{{DL - Search Term}}', content_category: 'products'}, {eventID: '{{DL - Event ID}}'});</script>"
           }
         ],
-        "firingTriggerId": ["search_trigger"]
+        "firingTriggerId": ["10"]
       },
       {
+        "tagId": "14",
         "name": "GA4 - WhatsApp Click",
         "type": "gaawe",
         "parameter": [
           {"type": "TEMPLATE", "key": "eventName", "value": "whatsapp_click"},
           {"type": "TEMPLATE", "key": "measurementIdOverride", "value": "{{GA4 Measurement ID}}"}
         ],
-        "firingTriggerId": ["whatsapp_click_trigger"]
+        "firingTriggerId": ["11"]
       },
       {
+        "tagId": "15",
         "name": "Meta Pixel - Contact (WhatsApp)",
         "type": "html",
         "parameter": [
@@ -196,18 +211,20 @@
             "value": "<script>fbq('track', 'Contact', {value: {{DL - Value}}, currency: '{{DL - Currency}}', content_name: '{{DL - Click Location}}', content_category: '{{DL - Service Interested}}'}, {eventID: '{{DL - Event ID}}'});</script>"
           }
         ],
-        "firingTriggerId": ["whatsapp_click_trigger"]
+        "firingTriggerId": ["11"]
       },
       {
+        "tagId": "16",
         "name": "GA4 - Phone Click",
         "type": "gaawe",
         "parameter": [
           {"type": "TEMPLATE", "key": "eventName", "value": "phone_click"},
           {"type": "TEMPLATE", "key": "measurementIdOverride", "value": "{{GA4 Measurement ID}}"}
         ],
-        "firingTriggerId": ["phone_click_trigger"]
+        "firingTriggerId": ["12"]
       },
       {
+        "tagId": "17",
         "name": "Meta Pixel - Contact (Phone)",
         "type": "html",
         "parameter": [
@@ -217,18 +234,20 @@
             "value": "<script>fbq('track', 'Contact', {content_name: '{{DL - Click Location}}', content_category: 'phone_call'}, {eventID: '{{DL - Event ID}}'});</script>"
           }
         ],
-        "firingTriggerId": ["phone_click_trigger"]
+        "firingTriggerId": ["12"]
       },
       {
+        "tagId": "18",
         "name": "GA4 - Contact Submit",
         "type": "gaawe",
         "parameter": [
           {"type": "TEMPLATE", "key": "eventName", "value": "contact_submit"},
           {"type": "TEMPLATE", "key": "measurementIdOverride", "value": "{{GA4 Measurement ID}}"}
         ],
-        "firingTriggerId": ["contact_submit_trigger"]
+        "firingTriggerId": ["13"]
       },
       {
+        "tagId": "19",
         "name": "Meta Pixel - Lead (Contact Form)",
         "type": "html",
         "parameter": [
@@ -238,27 +257,30 @@
             "value": "<script>fbq('track', 'Lead', {content_name: '{{DL - Form Name}}', content_category: '{{DL - Service Interested}}'}, {eventID: '{{DL - Event ID}}'});</script>"
           }
         ],
-        "firingTriggerId": ["contact_submit_trigger"]
+        "firingTriggerId": ["13"]
       },
       {
+        "tagId": "20",
         "name": "GA4 - Configurator Start",
         "type": "gaawe",
         "parameter": [
           {"type": "TEMPLATE", "key": "eventName", "value": "configurator_start"},
           {"type": "TEMPLATE", "key": "measurementIdOverride", "value": "{{GA4 Measurement ID}}"}
         ],
-        "firingTriggerId": ["configurator_start_trigger"]
+        "firingTriggerId": ["14"]
       },
       {
+        "tagId": "21",
         "name": "GA4 - Configurator Complete",
         "type": "gaawe",
         "parameter": [
           {"type": "TEMPLATE", "key": "eventName", "value": "configurator_complete"},
           {"type": "TEMPLATE", "key": "measurementIdOverride", "value": "{{GA4 Measurement ID}}"}
         ],
-        "firingTriggerId": ["configurator_complete_trigger"]
+        "firingTriggerId": ["15"]
       },
       {
+        "tagId": "22",
         "name": "Meta Pixel - Lead (Configurator)",
         "type": "html",
         "parameter": [
@@ -268,9 +290,10 @@
             "value": "<script>fbq('track', 'Lead', {value: {{DL - Value}}, currency: '{{DL - Currency}}', content_name: 'Configurator Kit - {{DL - Configurator Profile}}', content_category: 'gear_configurator'}, {eventID: '{{DL - Event ID}}'});</script>"
           }
         ],
-        "firingTriggerId": ["configurator_complete_trigger"]
+        "firingTriggerId": ["15"]
       },
       {
+        "tagId": "23",
         "name": "GA4 - View Item List",
         "type": "gaawe",
         "parameter": [
@@ -278,45 +301,368 @@
           {"type": "TEMPLATE", "key": "eventName", "value": "view_item_list"},
           {"type": "TEMPLATE", "key": "measurementIdOverride", "value": "{{GA4 Measurement ID}}"}
         ],
-        "firingTriggerId": ["view_item_list_trigger"]
+        "firingTriggerId": ["5"]
       }
     ],
     "trigger": [
-      {"name": "All Pages", "type": "PAGEVIEW"},
-      {"name": "CE - Page View", "type": "CUSTOM_EVENT", "customEventFilter": [{"type": "EQUALS", "parameter": [{"key": "arg0", "value": "{{_event}}"}, {"key": "arg1", "value": "page_view"}]}]},
-      {"name": "CE - View Content", "type": "CUSTOM_EVENT", "customEventFilter": [{"type": "EQUALS", "parameter": [{"key": "arg0", "value": "{{_event}}"}, {"key": "arg1", "value": "view_content"}]}]},
-      {"name": "CE - View Item List", "type": "CUSTOM_EVENT", "customEventFilter": [{"type": "EQUALS", "parameter": [{"key": "arg0", "value": "{{_event}}"}, {"key": "arg1", "value": "view_item_list"}]}]},
-      {"name": "CE - Add to Cart", "type": "CUSTOM_EVENT", "customEventFilter": [{"type": "EQUALS", "parameter": [{"key": "arg0", "value": "{{_event}}"}, {"key": "arg1", "value": "add_to_cart"}]}]},
-      {"name": "CE - Begin Checkout", "type": "CUSTOM_EVENT", "customEventFilter": [{"type": "EQUALS", "parameter": [{"key": "arg0", "value": "{{_event}}"}, {"key": "arg1", "value": "begin_checkout"}]}]},
-      {"name": "CE - Initiate Checkout", "type": "CUSTOM_EVENT", "customEventFilter": [{"type": "EQUALS", "parameter": [{"key": "arg0", "value": "{{_event}}"}, {"key": "arg1", "value": "initiate_checkout"}]}]},
-      {"name": "CE - Purchase", "type": "CUSTOM_EVENT", "customEventFilter": [{"type": "EQUALS", "parameter": [{"key": "arg0", "value": "{{_event}}"}, {"key": "arg1", "value": "purchase"}]}]},
-      {"name": "CE - Search", "type": "CUSTOM_EVENT", "customEventFilter": [{"type": "EQUALS", "parameter": [{"key": "arg0", "value": "{{_event}}"}, {"key": "arg1", "value": "search"}]}]},
-      {"name": "CE - WhatsApp Click", "type": "CUSTOM_EVENT", "customEventFilter": [{"type": "EQUALS", "parameter": [{"key": "arg0", "value": "{{_event}}"}, {"key": "arg1", "value": "whatsapp_click"}]}]},
-      {"name": "CE - Phone Click", "type": "CUSTOM_EVENT", "customEventFilter": [{"type": "EQUALS", "parameter": [{"key": "arg0", "value": "{{_event}}"}, {"key": "arg1", "value": "phone_click"}]}]},
-      {"name": "CE - Contact Submit", "type": "CUSTOM_EVENT", "customEventFilter": [{"type": "EQUALS", "parameter": [{"key": "arg0", "value": "{{_event}}"}, {"key": "arg1", "value": "contact_submit"}]}]},
-      {"name": "CE - Configurator Start", "type": "CUSTOM_EVENT", "customEventFilter": [{"type": "EQUALS", "parameter": [{"key": "arg0", "value": "{{_event}}"}, {"key": "arg1", "value": "configurator_start"}]}]},
-      {"name": "CE - Configurator Complete", "type": "CUSTOM_EVENT", "customEventFilter": [{"type": "EQUALS", "parameter": [{"key": "arg0", "value": "{{_event}}"}, {"key": "arg1", "value": "configurator_complete"}]}]}
+      {
+        "triggerId": "2",
+        "name": "All Pages",
+        "type": "PAGEVIEW"
+      },
+      {
+        "triggerId": "3",
+        "name": "CE - Page View",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {"type": "TEMPLATE", "key": "arg0", "value": "{{_event}}"},
+              {"type": "TEMPLATE", "key": "arg1", "value": "page_view"}
+            ]
+          }
+        ]
+      },
+      {
+        "triggerId": "4",
+        "name": "CE - View Content",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {"type": "TEMPLATE", "key": "arg0", "value": "{{_event}}"},
+              {"type": "TEMPLATE", "key": "arg1", "value": "view_content"}
+            ]
+          }
+        ]
+      },
+      {
+        "triggerId": "5",
+        "name": "CE - View Item List",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {"type": "TEMPLATE", "key": "arg0", "value": "{{_event}}"},
+              {"type": "TEMPLATE", "key": "arg1", "value": "view_item_list"}
+            ]
+          }
+        ]
+      },
+      {
+        "triggerId": "6",
+        "name": "CE - Add to Cart",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {"type": "TEMPLATE", "key": "arg0", "value": "{{_event}}"},
+              {"type": "TEMPLATE", "key": "arg1", "value": "add_to_cart"}
+            ]
+          }
+        ]
+      },
+      {
+        "triggerId": "7",
+        "name": "CE - Begin Checkout",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {"type": "TEMPLATE", "key": "arg0", "value": "{{_event}}"},
+              {"type": "TEMPLATE", "key": "arg1", "value": "begin_checkout"}
+            ]
+          }
+        ]
+      },
+      {
+        "triggerId": "8",
+        "name": "CE - Initiate Checkout",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {"type": "TEMPLATE", "key": "arg0", "value": "{{_event}}"},
+              {"type": "TEMPLATE", "key": "arg1", "value": "initiate_checkout"}
+            ]
+          }
+        ]
+      },
+      {
+        "triggerId": "9",
+        "name": "CE - Purchase",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {"type": "TEMPLATE", "key": "arg0", "value": "{{_event}}"},
+              {"type": "TEMPLATE", "key": "arg1", "value": "purchase"}
+            ]
+          }
+        ]
+      },
+      {
+        "triggerId": "10",
+        "name": "CE - Search",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {"type": "TEMPLATE", "key": "arg0", "value": "{{_event}}"},
+              {"type": "TEMPLATE", "key": "arg1", "value": "search"}
+            ]
+          }
+        ]
+      },
+      {
+        "triggerId": "11",
+        "name": "CE - WhatsApp Click",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {"type": "TEMPLATE", "key": "arg0", "value": "{{_event}}"},
+              {"type": "TEMPLATE", "key": "arg1", "value": "whatsapp_click"}
+            ]
+          }
+        ]
+      },
+      {
+        "triggerId": "12",
+        "name": "CE - Phone Click",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {"type": "TEMPLATE", "key": "arg0", "value": "{{_event}}"},
+              {"type": "TEMPLATE", "key": "arg1", "value": "phone_click"}
+            ]
+          }
+        ]
+      },
+      {
+        "triggerId": "13",
+        "name": "CE - Contact Submit",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {"type": "TEMPLATE", "key": "arg0", "value": "{{_event}}"},
+              {"type": "TEMPLATE", "key": "arg1", "value": "contact_submit"}
+            ]
+          }
+        ]
+      },
+      {
+        "triggerId": "14",
+        "name": "CE - Configurator Start",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {"type": "TEMPLATE", "key": "arg0", "value": "{{_event}}"},
+              {"type": "TEMPLATE", "key": "arg1", "value": "configurator_start"}
+            ]
+          }
+        ]
+      },
+      {
+        "triggerId": "15",
+        "name": "CE - Configurator Complete",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {"type": "TEMPLATE", "key": "arg0", "value": "{{_event}}"},
+              {"type": "TEMPLATE", "key": "arg1", "value": "configurator_complete"}
+            ]
+          }
+        ]
+      }
     ],
     "variable": [
-      {"name": "GA4 Measurement ID", "type": "c", "parameter": [{"key": "value", "value": "G-LSDW0CLYH3"}]},
-      {"name": "Meta Pixel ID", "type": "c", "parameter": [{"key": "value", "value": "833280669483577"}]},
-      {"name": "DL - Event ID", "type": "v", "parameter": [{"key": "dataLayerVersion", "value": "2"}, {"key": "name", "value": "event_id"}]},
-      {"name": "DL - Product ID", "type": "v", "parameter": [{"key": "dataLayerVersion", "value": "2"}, {"key": "name", "value": "product_id"}]},
-      {"name": "DL - Product Name", "type": "v", "parameter": [{"key": "dataLayerVersion", "value": "2"}, {"key": "name", "value": "product_name"}]},
-      {"name": "DL - Product Category", "type": "v", "parameter": [{"key": "dataLayerVersion", "value": "2"}, {"key": "name", "value": "product_category"}]},
-      {"name": "DL - Product IDs", "type": "v", "parameter": [{"key": "dataLayerVersion", "value": "2"}, {"key": "name", "value": "product_ids"}]},
-      {"name": "DL - Value", "type": "v", "parameter": [{"key": "dataLayerVersion", "value": "2"}, {"key": "name", "value": "value"}]},
-      {"name": "DL - Currency", "type": "v", "parameter": [{"key": "dataLayerVersion", "value": "2"}, {"key": "name", "value": "currency"}]},
-      {"name": "DL - Num Items", "type": "v", "parameter": [{"key": "dataLayerVersion", "value": "2"}, {"key": "name", "value": "num_items"}]},
-      {"name": "DL - Click Location", "type": "v", "parameter": [{"key": "dataLayerVersion", "value": "2"}, {"key": "name", "value": "click_location"}]},
-      {"name": "DL - Service Interested", "type": "v", "parameter": [{"key": "dataLayerVersion", "value": "2"}, {"key": "name", "value": "service_interested"}]},
-      {"name": "DL - Form Name", "type": "v", "parameter": [{"key": "dataLayerVersion", "value": "2"}, {"key": "name", "value": "form_name"}]},
-      {"name": "DL - Page Path", "type": "v", "parameter": [{"key": "dataLayerVersion", "value": "2"}, {"key": "name", "value": "page_path"}]},
-      {"name": "DL - Page Title", "type": "v", "parameter": [{"key": "dataLayerVersion", "value": "2"}, {"key": "name", "value": "page_title"}]},
-      {"name": "DL - Page Type", "type": "v", "parameter": [{"key": "dataLayerVersion", "value": "2"}, {"key": "name", "value": "page_type"}]},
-      {"name": "DL - Search Term", "type": "v", "parameter": [{"key": "dataLayerVersion", "value": "2"}, {"key": "name", "value": "search_term"}]},
-      {"name": "DL - Configurator Profile", "type": "v", "parameter": [{"key": "dataLayerVersion", "value": "2"}, {"key": "name", "value": "configurator_profile"}]},
-      {"name": "DL - Configurator Location", "type": "v", "parameter": [{"key": "dataLayerVersion", "value": "2"}, {"key": "name", "value": "configurator_location"}]}
+      {
+        "variableId": "1",
+        "name": "GA4 Measurement ID",
+        "type": "c",
+        "parameter": [
+          {"type": "TEMPLATE", "key": "value", "value": "G-LSDW0CLYH3"}
+        ]
+      },
+      {
+        "variableId": "2",
+        "name": "Meta Pixel ID",
+        "type": "c",
+        "parameter": [
+          {"type": "TEMPLATE", "key": "value", "value": "833280669483577"}
+        ]
+      },
+      {
+        "variableId": "3",
+        "name": "DL - Event ID",
+        "type": "v",
+        "parameter": [
+          {"type": "INTEGER", "key": "dataLayerVersion", "value": "2"},
+          {"type": "TEMPLATE", "key": "name", "value": "event_id"}
+        ]
+      },
+      {
+        "variableId": "4",
+        "name": "DL - Product ID",
+        "type": "v",
+        "parameter": [
+          {"type": "INTEGER", "key": "dataLayerVersion", "value": "2"},
+          {"type": "TEMPLATE", "key": "name", "value": "product_id"}
+        ]
+      },
+      {
+        "variableId": "5",
+        "name": "DL - Product Name",
+        "type": "v",
+        "parameter": [
+          {"type": "INTEGER", "key": "dataLayerVersion", "value": "2"},
+          {"type": "TEMPLATE", "key": "name", "value": "product_name"}
+        ]
+      },
+      {
+        "variableId": "6",
+        "name": "DL - Product Category",
+        "type": "v",
+        "parameter": [
+          {"type": "INTEGER", "key": "dataLayerVersion", "value": "2"},
+          {"type": "TEMPLATE", "key": "name", "value": "product_category"}
+        ]
+      },
+      {
+        "variableId": "7",
+        "name": "DL - Product IDs",
+        "type": "v",
+        "parameter": [
+          {"type": "INTEGER", "key": "dataLayerVersion", "value": "2"},
+          {"type": "TEMPLATE", "key": "name", "value": "product_ids"}
+        ]
+      },
+      {
+        "variableId": "8",
+        "name": "DL - Value",
+        "type": "v",
+        "parameter": [
+          {"type": "INTEGER", "key": "dataLayerVersion", "value": "2"},
+          {"type": "TEMPLATE", "key": "name", "value": "value"}
+        ]
+      },
+      {
+        "variableId": "9",
+        "name": "DL - Currency",
+        "type": "v",
+        "parameter": [
+          {"type": "INTEGER", "key": "dataLayerVersion", "value": "2"},
+          {"type": "TEMPLATE", "key": "name", "value": "currency"}
+        ]
+      },
+      {
+        "variableId": "10",
+        "name": "DL - Num Items",
+        "type": "v",
+        "parameter": [
+          {"type": "INTEGER", "key": "dataLayerVersion", "value": "2"},
+          {"type": "TEMPLATE", "key": "name", "value": "num_items"}
+        ]
+      },
+      {
+        "variableId": "11",
+        "name": "DL - Click Location",
+        "type": "v",
+        "parameter": [
+          {"type": "INTEGER", "key": "dataLayerVersion", "value": "2"},
+          {"type": "TEMPLATE", "key": "name", "value": "click_location"}
+        ]
+      },
+      {
+        "variableId": "12",
+        "name": "DL - Service Interested",
+        "type": "v",
+        "parameter": [
+          {"type": "INTEGER", "key": "dataLayerVersion", "value": "2"},
+          {"type": "TEMPLATE", "key": "name", "value": "service_interested"}
+        ]
+      },
+      {
+        "variableId": "13",
+        "name": "DL - Form Name",
+        "type": "v",
+        "parameter": [
+          {"type": "INTEGER", "key": "dataLayerVersion", "value": "2"},
+          {"type": "TEMPLATE", "key": "name", "value": "form_name"}
+        ]
+      },
+      {
+        "variableId": "14",
+        "name": "DL - Page Path",
+        "type": "v",
+        "parameter": [
+          {"type": "INTEGER", "key": "dataLayerVersion", "value": "2"},
+          {"type": "TEMPLATE", "key": "name", "value": "page_path"}
+        ]
+      },
+      {
+        "variableId": "15",
+        "name": "DL - Page Title",
+        "type": "v",
+        "parameter": [
+          {"type": "INTEGER", "key": "dataLayerVersion", "value": "2"},
+          {"type": "TEMPLATE", "key": "name", "value": "page_title"}
+        ]
+      },
+      {
+        "variableId": "16",
+        "name": "DL - Page Type",
+        "type": "v",
+        "parameter": [
+          {"type": "INTEGER", "key": "dataLayerVersion", "value": "2"},
+          {"type": "TEMPLATE", "key": "name", "value": "page_type"}
+        ]
+      },
+      {
+        "variableId": "17",
+        "name": "DL - Search Term",
+        "type": "v",
+        "parameter": [
+          {"type": "INTEGER", "key": "dataLayerVersion", "value": "2"},
+          {"type": "TEMPLATE", "key": "name", "value": "search_term"}
+        ]
+      },
+      {
+        "variableId": "18",
+        "name": "DL - Configurator Profile",
+        "type": "v",
+        "parameter": [
+          {"type": "INTEGER", "key": "dataLayerVersion", "value": "2"},
+          {"type": "TEMPLATE", "key": "name", "value": "configurator_profile"}
+        ]
+      },
+      {
+        "variableId": "19",
+        "name": "DL - Configurator Location",
+        "type": "v",
+        "parameter": [
+          {"type": "INTEGER", "key": "dataLayerVersion", "value": "2"},
+          {"type": "TEMPLATE", "key": "name", "value": "configurator_location"}
+        ]
+      }
     ]
   }
 }
