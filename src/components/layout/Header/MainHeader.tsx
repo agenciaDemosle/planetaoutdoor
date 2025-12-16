@@ -4,7 +4,7 @@ import { Search, ShoppingBag, Menu, X, ChevronRight, Mic, User } from 'lucide-re
 import { useCartStore } from '../../../store/useCartStore'
 import { useUIStore } from '../../../store/useUIStore'
 import { useAuthStore } from '../../../store/useAuthStore'
-import { GearConfiguratorModal } from '../../configurator'
+import { KitConfiguratorModal } from '../../kit'
 
 // Types for SpeechRecognition API
 interface SpeechRecognitionEvent extends Event {
@@ -710,8 +710,8 @@ export function MainHeader() {
         }
       `}</style>
 
-      {/* Gear Configurator Modal */}
-      <GearConfiguratorModal
+      {/* Kit Configurator Modal */}
+      <KitConfiguratorModal
         isOpen={isConfiguratorOpen}
         onClose={() => setIsConfiguratorOpen(false)}
       />

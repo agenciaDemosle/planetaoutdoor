@@ -220,22 +220,6 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Credits */}
-      <div className="border-t border-white/5 bg-black/50">
-        <div className="px-4 md:px-10 lg:px-20 max-w-container mx-auto py-3">
-          <p className="text-center text-[10px] text-gray-600">
-            Desarrollado por{' '}
-            <a
-              href="https://demosle.cl"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#FE6A00] hover:text-white transition-colors font-medium"
-            >
-              demosle.cl
-            </a>
-          </p>
-        </div>
-      </div>
     </footer>
   )
 }

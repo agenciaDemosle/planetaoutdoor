@@ -42,6 +42,51 @@ const patagoniaWaders: WaderWithVideo[] = [
   },
 ]
 
+// Productos destacados adicionales de Patagonia
+interface FeaturedProduct {
+  id: number
+  name: string
+  slug: string
+  price: string
+  image: string
+  category: string
+}
+
+const patagoniaFeaturedProducts: FeaturedProduct[] = [
+  {
+    id: 5369,
+    name: 'Botas Foot Tractor Wading',
+    slug: 'patagonia-botas-foot-tractor-wading',
+    price: '$324.000',
+    image: 'https://planetaoutdoor.cl/wp-content/uploads/2024/10/IMG_0217.jpeg',
+    category: 'Botas',
+  },
+  {
+    id: 5249,
+    name: 'Botas Forra Wading',
+    slug: 'botas-de-pesca-forra-wading-boots',
+    price: '$284.000',
+    image: 'https://planetaoutdoor.cl/wp-content/uploads/2024/09/79206_FGE.webp',
+    category: 'Botas',
+  },
+  {
+    id: 6191,
+    name: 'Chaqueta Swiftcurrent',
+    slug: 'chaqueta-hombre-swiftcurrent-wading-jacket',
+    price: '$309.000',
+    image: 'https://planetaoutdoor.cl/wp-content/uploads/2025/08/81771_RVGN.webp',
+    category: 'Chaquetas',
+  },
+  {
+    id: 5397,
+    name: 'Wader Swiftcurrent Mujer',
+    slug: 'wader-patagonia-swiftcurrent-mujer',
+    price: '$429.000',
+    image: 'https://planetaoutdoor.cl/wp-content/uploads/2024/10/IMG_0371.jpeg',
+    category: 'Waders',
+  },
+]
+
 export function PatagoniaWadersSection() {
 
   return (
@@ -91,6 +136,41 @@ export function PatagoniaWadersSection() {
           {patagoniaWaders.map((wader) => (
             <WaderVideoCard key={wader.id} wader={wader} />
           ))}
+        </div>
+
+        {/* Productos destacados adicionales */}
+        <div className="mt-10 md:mt-14">
+          <h3 className="text-xl md:text-2xl font-bold mb-6 text-center">
+            Más productos Patagonia
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            {patagoniaFeaturedProducts.map((product) => (
+              <Link
+                key={product.id}
+                to={`/producto/${product.slug}`}
+                className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300"
+              >
+                <div className="aspect-square overflow-hidden bg-gray-100">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="p-3 md:p-4">
+                  <span className="text-xs text-[#FE6A00] font-medium uppercase tracking-wide">
+                    {product.category}
+                  </span>
+                  <h4 className="text-sm md:text-base font-semibold mt-1 line-clamp-2 group-hover:text-[#FE6A00] transition-colors">
+                    {product.name}
+                  </h4>
+                  <p className="text-sm md:text-base font-bold text-gray-900 mt-2">
+                    {product.price}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </section>

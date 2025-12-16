@@ -7,6 +7,7 @@ import {
   NewsletterSection,
 } from '../components/landing'
 import { BlogSection } from '../components/landing/BlogSection'
+import { SkwalaSection } from '../components/landing/SkwalaSection'
 
 export function HomePage() {
   return (
@@ -27,6 +28,9 @@ export function HomePage() {
 
       {/* Patagonia Waders Section - Banner + 2 waders with video */}
       <PatagoniaWadersSection />
+
+      {/* Skwala Section - Premium fishing gear */}
+      <SkwalaSection />
 
       {/* Featured Products - Real products from WooCommerce */}
       <FeaturedProducts />

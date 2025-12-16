@@ -1,1 +1,0 @@
-export { GearConfiguratorModal } from './GearConfiguratorModal'
