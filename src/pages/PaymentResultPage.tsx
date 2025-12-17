@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { CheckCircle, XCircle, Clock, Package, ArrowRight, Home } from 'lucide-react'
 import { formatPrice } from '../data/products'
+import { trackPurchase } from '../hooks/useAnalytics'
 
 type PaymentStatus = 'success' | 'failure' | 'pending'
 
@@ -37,6 +38,7 @@ interface PaymentResultPageProps {
 export function PaymentResultPage({ status }: PaymentResultPageProps) {
   const [searchParams] = useSearchParams()
   const [orderData, setOrderData] = useState<OrderData | null>(null)
+  const [hasTrackedPurchase, setHasTrackedPurchase] = useState(false)
 
   const orderId = searchParams.get('order')
   const paymentId = searchParams.get('payment_id')
@@ -53,6 +55,33 @@ export function PaymentResultPage({ status }: PaymentResultPageProps) {
       }
     }
   }, [orderId, externalReference])
+
+  // Track purchase on success
+  useEffect(() => {
+    if (status === 'success' && orderData && !hasTrackedPurchase) {
+      setHasTrackedPurchase(true)
+
+      const orderKey = orderId || externalReference || 'unknown'
+
+      trackPurchase({
+        transaction_id: orderKey,
+        value: orderData.total,
+        num_items: orderData.items.length,
+        product_ids: orderData.items.map(item => item.id.toString()),
+        product_names: orderData.items.map(item => item.name),
+        email: orderData.formData.email,
+        phone: orderData.formData.phone,
+        firstName: orderData.formData.firstName,
+        lastName: orderData.formData.lastName,
+        items: orderData.items.map(item => ({
+          item_id: item.id.toString(),
+          item_name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+        })),
+      })
+    }
+  }, [status, orderData, hasTrackedPurchase, orderId, externalReference])
 
   const statusConfig = {
     success: {

@@ -7,6 +7,7 @@ import { formatPrice } from '../data/products'
 import { mercadoPagoAPI } from '../api/mercadopago'
 import { transbankAPI } from '../api/transbank'
 import { RedirectingToPaymentPage } from './RedirectingToPaymentPage'
+import { trackInitiateCheckout } from '../hooks/useAnalytics'
 
 type CheckoutStep = 'information' | 'shipping' | 'payment'
 
@@ -82,6 +83,24 @@ export function CheckoutPage() {
     setSelectedShipping('pickup')
     setLoadingShipping(false)
   }, [])
+
+  // Track checkout initiation
+  useEffect(() => {
+    if (items.length > 0) {
+      trackInitiateCheckout({
+        cart_total: getTotal(),
+        num_items: items.length,
+        product_ids: items.map(item => item.id.toString()),
+        items: items.map(item => ({
+          item_id: item.id.toString(),
+          item_name: item.name,
+          item_category: 'productos',
+          price: item.price,
+          quantity: item.quantity,
+        })),
+      })
+    }
+  }, []) // Only run once on mount
   const [formData, setFormData] = useState({
     email: '',
     firstName: '',

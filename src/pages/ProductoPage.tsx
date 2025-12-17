@@ -17,6 +17,7 @@ import { SizeCalculator } from '../components/product/SizeCalculator'
 import { ProductAdvisor } from '../components/product/ProductAdvisor'
 import { CompleteYourGear } from '../components/product/CompleteYourGear'
 import toast from 'react-hot-toast'
+import { trackViewContent, trackAddToCart } from '../hooks/useAnalytics'
 
 export function ProductoPage() {
   const { slug } = useParams()
@@ -56,6 +57,14 @@ export function ProductoPage() {
             const mappedVariations = variationsData.map(mapWooVariationToVariation)
             setVariations(mappedVariations)
           }
+
+          // Track product view
+          trackViewContent({
+            product_id: mappedProduct.id.toString(),
+            product_name: mappedProduct.name,
+            product_category: mappedProduct.categories?.[0] || 'sin-categoria',
+            product_price: mappedProduct.price,
+          })
         } else {
           setError('Producto no encontrado')
         }
@@ -113,6 +122,15 @@ export function ProductoPage() {
       imageUrl: selectedVariation?.image || product.imageUrl,
       quantity,
       options: Object.keys(selectedOptions).length > 0 ? selectedOptions : undefined,
+    })
+
+    // Track add to cart
+    trackAddToCart({
+      product_id: (selectedVariation?.id ?? product.id).toString(),
+      product_name: product.name,
+      product_category: product.categories?.[0] || 'sin-categoria',
+      product_price: currentPrice,
+      quantity,
     })
 
     toast.success(

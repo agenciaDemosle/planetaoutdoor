@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { CheckCircle, Clock, ExternalLink, Package, ArrowRight } from 'lucide-react'
 import { wooCommerceAPI } from '../api/woocommerce'
 import { formatPrice } from '../data/products'
+import { trackPurchase } from '../hooks/useAnalytics'
 
 interface OrderState {
   orderId: number
@@ -15,6 +16,7 @@ export function OrderConfirmedPage() {
   const state = location.state as OrderState | null
   const [orderStatus, setOrderStatus] = useState<string>('pending')
   const [isChecking, setIsChecking] = useState(false)
+  const [hasTrackedPurchase, setHasTrackedPurchase] = useState(false)
 
   useEffect(() => {
     if (!state?.orderId) return
@@ -25,6 +27,29 @@ export function OrderConfirmedPage() {
         setIsChecking(true)
         const order = await wooCommerceAPI.getOrder(state.orderId)
         setOrderStatus(order.status)
+
+        // Track purchase when order is completed or processing (only once)
+        if ((order.status === 'completed' || order.status === 'processing') && !hasTrackedPurchase) {
+          setHasTrackedPurchase(true)
+
+          trackPurchase({
+            transaction_id: order.id.toString(),
+            value: parseFloat(order.total),
+            num_items: order.line_items?.length || 0,
+            product_ids: order.line_items?.map((item: any) => item.product_id.toString()) || [],
+            product_names: order.line_items?.map((item: any) => item.name) || [],
+            email: order.billing?.email,
+            phone: order.billing?.phone,
+            firstName: order.billing?.first_name,
+            lastName: order.billing?.last_name,
+            items: order.line_items?.map((item: any) => ({
+              item_id: item.product_id.toString(),
+              item_name: item.name,
+              price: parseFloat(item.price),
+              quantity: item.quantity,
+            })) || [],
+          })
+        }
       } catch (error) {
         console.error('Error checking order status:', error)
       } finally {
@@ -36,7 +61,7 @@ export function OrderConfirmedPage() {
     const interval = setInterval(checkOrderStatus, 5000)
 
     return () => clearInterval(interval)
-  }, [state?.orderId])
+  }, [state?.orderId, hasTrackedPurchase])
 
   const getStatusInfo = () => {
     switch (orderStatus) {

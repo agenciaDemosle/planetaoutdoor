@@ -6,6 +6,7 @@ import { wooCommerceAPI } from '../api/woocommerce'
 import { WooProduct, Product, mapWooProductToProduct } from '../types/product'
 import { ProductCard } from '../components/product/ProductCard/ProductCard'
 import { ProductFilters, CATEGORY_FILTERS, PARENT_CATEGORY_FILTERS } from '../components/shop/ProductFilters'
+import { trackViewItemList } from '../hooks/useAnalytics'
 
 interface FilterState {
   [attributeSlug: string]: string[]
@@ -268,6 +269,27 @@ export function TiendaPage() {
         const data: WooProduct[] = await wooCommerceAPI.getProducts(params)
         const mappedProducts = data.map(mapWooProductToProduct)
         setProducts(mappedProducts)
+
+        // Track view item list
+        if (mappedProducts.length > 0) {
+          const listName = searchQuery
+            ? `Búsqueda: ${searchQuery}`
+            : currentCategory
+            ? currentCategory.name
+            : 'Todos los productos'
+
+          trackViewItemList({
+            item_list_name: listName,
+            item_list_id: currentCategory?.slug || 'all',
+            items: mappedProducts.map((product, index) => ({
+              item_id: product.id.toString(),
+              item_name: product.name,
+              item_category: product.categories?.[0] || 'sin-categoria',
+              price: product.price,
+              index,
+            })),
+          })
+        }
 
         // For total count, we need to make an additional request
         // WooCommerce returns total in headers, but we'll estimate for now

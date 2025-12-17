@@ -5,6 +5,7 @@ import { useCartStore } from '../../../store/useCartStore'
 import { useUIStore } from '../../../store/useUIStore'
 import { useAuthStore } from '../../../store/useAuthStore'
 import { KitConfiguratorModal } from '../../kit'
+import { trackConfiguratorStart, trackSearch } from '../../../hooks/useAnalytics'
 
 // Types for SpeechRecognition API
 interface SpeechRecognitionEvent extends Event {
@@ -319,6 +320,12 @@ export function MainHeader() {
 
   const handleSearch = (query: string) => {
     if (query.trim()) {
+      // Track search
+      trackSearch({
+        search_term: query.trim(),
+        search_type: 'text',
+      })
+
       setIsSearchOpen(false)
       setSearchQuery('')
       navigate(`/tienda?buscar=${encodeURIComponent(query.trim())}`)
@@ -425,7 +432,10 @@ export function MainHeader() {
             <div className="flex items-center gap-0.5 ml-auto">
               {/* Configurator Button */}
               <button
-                onClick={() => setIsConfiguratorOpen(true)}
+                onClick={() => {
+                  trackConfiguratorStart({ location: 'header' })
+                  setIsConfiguratorOpen(true)
+                }}
                 className="hidden sm:flex items-center px-4 py-1.5 bg-[#FE6A00] text-white text-xs font-medium tracking-wide uppercase hover:bg-[#e55f00] transition-colors mr-1"
                 aria-label="Configurador de Equipo"
               >
@@ -434,7 +444,10 @@ export function MainHeader() {
 
               {/* Mobile Configurator Button */}
               <button
-                onClick={() => setIsConfiguratorOpen(true)}
+                onClick={() => {
+                  trackConfiguratorStart({ location: 'header_mobile' })
+                  setIsConfiguratorOpen(true)
+                }}
                 className="sm:hidden px-3 py-1.5 bg-[#FE6A00] text-white text-[10px] font-medium tracking-wide uppercase hover:bg-[#e55f00] transition-colors"
                 aria-label="Configurador de Equipo"
               >

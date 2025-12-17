@@ -17,6 +17,7 @@ import {
   KitRecommendation,
   KitProduct,
 } from './kitData'
+import { trackConfiguratorComplete, trackConfiguratorAddKit } from '../../hooks/useAnalytics'
 
 interface KitConfiguratorModalProps {
   isOpen: boolean
@@ -64,8 +65,28 @@ export function KitConfiguratorModal({ isOpen, onClose }: KitConfiguratorModalPr
     if (lineNumber && state.level) {
       const rec = getKitRecommendation(lineNumber, state.level, state.lineType, state.technique)
       setRecommendation(rec)
+
+      // Track configurator complete when recommendation is shown
+      if (rec && state.step > TOTAL_STEPS) {
+        const profileName = `${state.species}_${state.water}_${state.technique}_L${lineNumber}`
+        trackConfiguratorComplete({
+          profile: profileName,
+          num_products: 3,
+          total_value: calculateKitTotal(rec, state.wantsUpgrade),
+          product_ids: [
+            rec.cana.id.toString(),
+            (state.wantsUpgrade && rec.upgradeCarrete ? rec.upgradeCarrete.id : rec.carrete.id).toString(),
+            rec.linea.id.toString(),
+          ],
+          product_names: [
+            rec.cana.name,
+            (state.wantsUpgrade && rec.upgradeCarrete ? rec.upgradeCarrete.name : rec.carrete.name),
+            rec.linea.name,
+          ],
+        })
+      }
     }
-  }, [lineNumber, state.level, state.lineType, state.technique])
+  }, [lineNumber, state.level, state.lineType, state.technique, state.step, state.species, state.water, state.wantsUpgrade])
 
   const handleSelect = (field: keyof ConfiguratorState, value: string | boolean) => {
     setState(prev => ({ ...prev, [field]: value }))
@@ -133,6 +154,24 @@ export function KitConfiguratorModal({ isOpen, onClose }: KitConfiguratorModalPr
     }
 
     addProductToCart(recommendation.linea)
+
+    // Track adding full kit to cart
+    const profileName = `${state.species}_${state.water}_${state.technique}_L${lineNumber}`
+    trackConfiguratorAddKit({
+      profile: profileName,
+      num_products: 3,
+      total_value: calculateKitTotal(recommendation, state.wantsUpgrade),
+      product_ids: [
+        recommendation.cana.id.toString(),
+        (state.wantsUpgrade && recommendation.upgradeCarrete ? recommendation.upgradeCarrete.id : recommendation.carrete.id).toString(),
+        recommendation.linea.id.toString(),
+      ],
+      product_names: [
+        recommendation.cana.name,
+        (state.wantsUpgrade && recommendation.upgradeCarrete ? recommendation.upgradeCarrete.name : recommendation.carrete.name),
+        recommendation.linea.name,
+      ],
+    })
 
     setTimeout(() => {
       setIsAdding(false)

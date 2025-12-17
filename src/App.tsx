@@ -5,6 +5,7 @@ import { HelmetProvider } from 'react-helmet-async'
 import { Toaster } from 'react-hot-toast'
 
 import { Layout } from './components/layout/Layout'
+import { useAnalytics } from './hooks/useAnalytics'
 import {
   HomePage,
   ProductsPage,
@@ -47,12 +48,19 @@ function ScrollToTop() {
   return null
 }
 
+function AnalyticsProvider() {
+  // Initialize analytics tracking (page views, scroll, engagement, etc.)
+  useAnalytics()
+  return null
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
         <BrowserRouter>
           <ScrollToTop />
+          <AnalyticsProvider />
           <Layout>
             <Routes>
               <Route path="/" element={<HomePage />} />

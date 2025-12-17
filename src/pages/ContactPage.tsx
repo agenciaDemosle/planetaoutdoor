@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Mail, Phone, MapPin, MessageCircle, Send } from 'lucide-react'
 import { env } from '../config/env'
+import { trackContactSubmit, trackWhatsAppClick, trackPhoneClick } from '../hooks/useAnalytics'
 
 export function ContactPage() {
   const [formData, setFormData] = useState({
@@ -21,6 +22,16 @@ export function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Track contact form submission
+    trackContactSubmit({
+      form_name: 'contact_page_form',
+      service_interested: sendMethod,
+      email: formData.email,
+      phone: formData.telefono,
+      firstName: formData.nombre.split(' ')[0],
+      lastName: formData.nombre.split(' ').slice(1).join(' '),
+    })
 
     if (sendMethod === 'whatsapp') {
       const message = `Hola! Mi nombre es ${formData.nombre}.%0A%0AEmail: ${formData.email}%0ATeléfono: ${formData.telefono}%0A%0AMensaje: ${formData.mensaje}`
@@ -71,10 +82,30 @@ export function ContactPage() {
                 <div>
                   <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Teléfono / WhatsApp</p>
                   <div className="space-y-1">
-                    <a href="https://wa.me/56983610365" target="_blank" rel="noopener noreferrer" className="block text-black hover:text-[#f46d47] transition-colors">
+                    <a
+                      href="https://wa.me/56983610365"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block text-black hover:text-[#f46d47] transition-colors"
+                      onClick={() => trackWhatsAppClick({
+                        click_location: 'contact_page_eduardo',
+                        button_text: 'Eduardo: +56 9 8361 0365',
+                        service_interested: 'contact_direct',
+                      })}
+                    >
                       Eduardo: +56 9 8361 0365
                     </a>
-                    <a href="https://wa.me/56932563910" target="_blank" rel="noopener noreferrer" className="block text-black hover:text-[#f46d47] transition-colors">
+                    <a
+                      href="https://wa.me/56932563910"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block text-black hover:text-[#f46d47] transition-colors"
+                      onClick={() => trackWhatsAppClick({
+                        click_location: 'contact_page_daniel',
+                        button_text: 'Daniel: +56 9 3256 3910',
+                        service_interested: 'contact_direct',
+                      })}
+                    >
                       Daniel: +56 9 3256 3910
                     </a>
                   </div>

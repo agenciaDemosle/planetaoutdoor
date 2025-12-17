@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Instagram, Facebook, Phone, Mail, MapPin, Clock } from 'lucide-react'
+import { trackWhatsAppClick } from '../../hooks/useAnalytics'
 
 export function Footer() {
   return (
@@ -134,6 +135,11 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 hover:text-[#25D366] transition-colors"
+                onClick={() => trackWhatsAppClick({
+                  click_location: 'footer_eduardo',
+                  button_text: 'Eduardo: +56 9 8361 0365',
+                  service_interested: 'contact_footer',
+                })}
               >
                 <Phone size={16} className="flex-shrink-0" />
                 <span>Eduardo: +56 9 8361 0365</span>
@@ -143,6 +149,11 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 hover:text-[#25D366] transition-colors"
+                onClick={() => trackWhatsAppClick({
+                  click_location: 'footer_daniel',
+                  button_text: 'Daniel: +56 9 3256 3910',
+                  service_interested: 'contact_footer',
+                })}
               >
                 <Phone size={16} className="flex-shrink-0" />
                 <span>Daniel: +56 9 3256 3910</span>

@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight, ShoppingBag, ImageOff } from 'lucide-react'
 import { wooCommerceAPI } from '../../api/woocommerce'
 import { useCartStore } from '../../store/useCartStore'
 import { useUIStore } from '../../store/useUIStore'
+import { trackAddToCart } from '../../hooks/useAnalytics'
 
 import 'swiper/css'
 import 'swiper/css/navigation'
@@ -94,12 +95,25 @@ export function FeaturedProducts() {
     e.preventDefault()
     e.stopPropagation()
 
+    const price = parseFloat(product.price)
+
     addItem({
       id: product.id,
       name: product.name,
       slug: product.slug,
-      price: parseFloat(product.price),
+      price,
       imageUrl: product.images[0]?.src || '',
+    })
+
+    // Track add to cart
+    trackAddToCart({
+      product_id: product.id.toString(),
+      product_name: product.name,
+      product_category: product.categories?.[0]?.name || 'sin-categoria',
+      product_price: price,
+      quantity: 1,
+      item_list_name: 'Productos Destacados',
+      item_list_id: 'featured_products',
     })
 
     openCart()

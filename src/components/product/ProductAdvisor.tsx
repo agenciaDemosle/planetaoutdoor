@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { HelpCircle, ChevronDown, ChevronUp, ChevronRight } from 'lucide-react'
+import { trackPhoneClick } from '../../hooks/useAnalytics'
 
 interface FAQ {
   question: string
@@ -237,11 +238,21 @@ export function ProductAdvisor({ productName, productCategory }: ProductAdvisorP
           <div className="p-4 bg-gray-50 border-t border-gray-100">
             <p className="text-xs text-gray-500 text-center">
               ¿No encontraste tu respuesta? Llámanos:{' '}
-              <a href="tel:+56983610365" className="font-medium" style={{ color: '#FE6A00' }}>
+              <a
+                href="tel:+56983610365"
+                className="font-medium"
+                style={{ color: '#FE6A00' }}
+                onClick={() => trackPhoneClick('product_advisor_eduardo', 'Eduardo')}
+              >
                 Eduardo
               </a>
               {' o '}
-              <a href="tel:+56932563910" className="font-medium" style={{ color: '#FE6A00' }}>
+              <a
+                href="tel:+56932563910"
+                className="font-medium"
+                style={{ color: '#FE6A00' }}
+                onClick={() => trackPhoneClick('product_advisor_daniel', 'Daniel')}
+              >
                 Daniel
               </a>
             </p>

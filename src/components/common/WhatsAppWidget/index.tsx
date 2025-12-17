@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { X, ChevronRight, ArrowLeft, MessageCircle, HelpCircle, Truck, CreditCard, RefreshCw, Clock } from 'lucide-react'
+import { trackWhatsAppClick } from '../../../hooks/useAnalytics'
 
 interface FAQ {
   id: string
@@ -52,6 +53,15 @@ export function WhatsAppWidget() {
   const handleChat = (customMessage?: string) => {
     const message = customMessage || defaultMessage
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+
+    // Track WhatsApp click
+    const clickLocation = selectedFaq ? `widget_faq_${selectedFaq.id}` : 'widget_direct'
+    trackWhatsAppClick({
+      click_location: clickLocation,
+      button_text: selectedFaq ? 'Consultar más por WhatsApp' : 'Hablar con un asesor',
+      service_interested: selectedFaq ? selectedFaq.id : 'general',
+    })
+
     window.open(url, '_blank')
   }
 
