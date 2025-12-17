@@ -141,7 +141,7 @@ export function CompleteYourGear({ currentProduct }: CompleteYourGearProps) {
     trackAddToCart({
       product_id: product.id.toString(),
       product_name: product.name,
-      product_category: product.categories?.[0]?.name || 'sin-categoria',
+      product_category: product.categories?.[0]?.slug || 'sin-categoria',
       product_price: price,
       quantity: 1,
       item_list_name: 'Completa tu Equipo',

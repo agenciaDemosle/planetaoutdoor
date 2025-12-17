@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Mail, Phone, MapPin, MessageCircle, Send } from 'lucide-react'
 import { env } from '../config/env'
-import { trackContactSubmit, trackWhatsAppClick, trackPhoneClick } from '../hooks/useAnalytics'
+import { trackContactSubmit, trackWhatsAppClick } from '../hooks/useAnalytics'
 
 export function ContactPage() {
   const [formData, setFormData] = useState({

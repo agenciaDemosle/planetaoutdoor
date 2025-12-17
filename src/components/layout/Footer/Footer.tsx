@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Instagram, Facebook, Phone, Mail, MapPin, Clock } from 'lucide-react'
-import { trackWhatsAppClick } from '../../hooks/useAnalytics'
+import { trackWhatsAppClick } from '../../../hooks/useAnalytics'
 
 export function Footer() {
   return (

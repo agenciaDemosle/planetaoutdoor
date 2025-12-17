@@ -62,7 +62,7 @@ export function ProductoPage() {
           trackViewContent({
             product_id: mappedProduct.id.toString(),
             product_name: mappedProduct.name,
-            product_category: mappedProduct.categories?.[0] || 'sin-categoria',
+            product_category: mappedProduct.categories?.[0]?.slug || 'sin-categoria',
             product_price: mappedProduct.price,
           })
         } else {
@@ -128,7 +128,7 @@ export function ProductoPage() {
     trackAddToCart({
       product_id: (selectedVariation?.id ?? product.id).toString(),
       product_name: product.name,
-      product_category: product.categories?.[0] || 'sin-categoria',
+      product_category: product.categories?.[0]?.slug || 'sin-categoria',
       product_price: currentPrice,
       quantity,
     })

@@ -284,7 +284,7 @@ export function TiendaPage() {
             items: mappedProducts.map((product, index) => ({
               item_id: product.id.toString(),
               item_name: product.name,
-              item_category: product.categories?.[0] || 'sin-categoria',
+              item_category: product.categories?.[0]?.slug || 'sin-categoria',
               price: product.price,
               index,
             })),
